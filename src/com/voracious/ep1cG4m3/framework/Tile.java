@@ -42,7 +42,7 @@ public class Tile extends Drawable {
 	public static final String IMAGE_RESOURCE = "tiles.png";
 	public static final int TILE_SIZE = 25;
 	
-	public static Map<String, Integer> types = new HashMap<String, Integer>();
+	public static Map<String, Integer> types;
 	private boolean isTangible;
 	private String myType;
 	private int myId;
@@ -61,6 +61,7 @@ public class Tile extends Drawable {
 		isTangible = false;
 		myType = type;
 		myId = tileId;
+		types = new HashMap<String, Integer>();
 	}
 	
 	/**
@@ -78,6 +79,7 @@ public class Tile extends Drawable {
 		isTangible = false;
 		myType = type;
 		myId = tileId;
+		types = new HashMap<String, Integer>();
 	}
 	
 	/**
@@ -96,6 +98,7 @@ public class Tile extends Drawable {
 		isTangible = tangible;
 		myType = type;
 		myId = tileId;
+		types = new HashMap<String, Integer>();
 	}
 	
 	/**

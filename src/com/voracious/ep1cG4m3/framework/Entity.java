@@ -33,21 +33,25 @@ import com.voracious.ep1cG4m3.utils.Point;
 import com.voracious.ep1cG4m3.utils.Animation;
 
 public class Entity extends Drawable {
-	private Map<String, Animation> myAnimations = new HashMap<String, Animation>();
+	private Map<String, Animation> myAnimations;
 	private String currentAnimation;
 	private Point dPoint;
 	private Point aPoint;
 	
 	public Entity(){
 		super();
+		myAnimations = new HashMap<String, Animation>();
+		dPoint = new Point(0, 0);
+		aPoint = new Point(0, 0);
+		currentAnimation = "";
 	}
 	
-	public void addAnimation(Animation animation, String animationName){
-		
+	public void addAnimation(String animationName, Animation animation){
+		myAnimations.put(animationName, animation);
 	}
 	
 	public void setAnimation(String name){
-		
+		currentAnimation = name;
 	}
 	
 	public Map<String, Animation> getAnimations(){
@@ -58,6 +62,7 @@ public class Entity extends Drawable {
 		return currentAnimation;
 	}
 	
+	@Override
 	public void setImage(BufferedImage image){
 		super.setImage(image);
 	}
