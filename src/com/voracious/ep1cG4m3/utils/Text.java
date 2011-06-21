@@ -2,6 +2,10 @@ package com.voracious.ep1cG4m3.utils;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import com.voracious.ep1cG4m3.framework.Drawable;
 
@@ -13,7 +17,7 @@ import com.voracious.ep1cG4m3.framework.Drawable;
 
 public class Text extends Drawable {
 	
-	public static final String FONT_IMAGE = "font.png";
+	public static final String IMAGE_RESOURCE = "font.png";
 	public static final int FONT_WIDTH = 5;
 	public static final int FONT_HEIGHT = 7;
 	
@@ -59,7 +63,19 @@ public class Text extends Drawable {
 	 */
 	
 	public static BufferedImage parseString(String text){
-		return null; //TODO: Implement method
+		try {
+			BufferedImage fontImg = ImageIO.read(new File("/res/", IMAGE_RESOURCE));
+			/* This line could be usefull: img = img.getSubimage(x, y, width, height);
+			 * Do everything within the try{} block
+			 * I'm sorry I'm not sure how to create an image and append to it. But here is the BufferedImage
+			 * Documentation: http://download.oracle.com/javase/1.4.2/docs/api/java/awt/image/BufferedImage.html
+			 * You could at least write the rest of it and leave a todo comment and I'll figure it out.
+			 */
+			return fontImg;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		} //TODO: Implement method completely
 		/*
 		 * The letters are in ascii order starting at number 32 and going to 176.
 		 * So, they can be found by looping through the string and
