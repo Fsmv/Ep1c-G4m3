@@ -29,6 +29,7 @@ import com.voracious.ep1cG4m3.utils.Point;
  * Super class all classes that will be drawn must extend.
  * 
  * @author Voracious Softworks
+ * @version 6/20/2011
  */
 
 public class Drawable {
@@ -77,6 +78,7 @@ public class Drawable {
 	 * @param image Display image for the class
 	 * @param visible Whether the image should be visible or not
 	 * @param point location
+	 * @see Point
 	 */
 	
 	public Drawable(BufferedImage image, boolean visible, Point point){
@@ -130,6 +132,7 @@ public class Drawable {
 	 * Supplies the location the image will be displayed at.
 	 * 
 	 * @return Current location.
+	 * @see Point
 	 */
 	
 	public Point getLocation(){

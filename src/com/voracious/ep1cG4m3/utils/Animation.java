@@ -26,6 +26,7 @@ import java.util.ArrayList;
  * Utility class for storing and playing an animation.
  * 
  * @author Voracious Softworks
+ * @version 6/20/2011
  */
 
 public class Animation {

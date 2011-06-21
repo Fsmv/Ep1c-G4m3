@@ -1,6 +1,5 @@
 package com.voracious.ep1cG4m3.framework;
 
-
 /*  
  *  Ep1c G4m3 -- A parody platformer
  * 
@@ -27,14 +26,14 @@ package com.voracious.ep1cG4m3.framework;
  * @version 6/20/2011
  */
 
+import java.util.HashMap;
 import java.util.Map;
 import java.awt.image.BufferedImage;
 import com.voracious.ep1cG4m3.utils.Point;
-import com.voracious.ep1cG4m3.utils.Animation;;
+import com.voracious.ep1cG4m3.utils.Animation;
+
 public class Entity extends Drawable {
-	
-	
-	private Map myAnimations; //TODO:Parameterize Map, as suggested by the warning.
+	private Map<String, Animation> myAnimations = new HashMap<String, Animation>();
 	private String currentAnimation;
 	private Point dPoint;
 	private Point aPoint;
@@ -51,7 +50,7 @@ public class Entity extends Drawable {
 		
 	}
 	
-	public Map getAnimations(){
+	public Map<String, Animation> getAnimations(){
 		return myAnimations;
 	}
 	
