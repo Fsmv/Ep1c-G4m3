@@ -19,24 +19,32 @@ package com.voracious.ep1cG4m3.framework;
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
+import java.util.HashMap;
+import java.util.Map;
+import java.awt.Graphics2D;
+
+import com.voracious.ep1cG4m3.utils.Point;
+import com.voracious.ep1cG4m3.utils.Animation;
+
 /**
  * Framework class that creates the general model for the enemies and characters.
  * 
  * @author Voracious Softworks
  * @version 6/20/2011
+ * @see Drawable
  */
-
-import java.util.HashMap;
-import java.util.Map;
-import java.awt.image.BufferedImage;
-import com.voracious.ep1cG4m3.utils.Point;
-import com.voracious.ep1cG4m3.utils.Animation;
 
 public class Entity extends Drawable {
 	private Map<String, Animation> myAnimations;
 	private String currentAnimation;
 	private Point dPoint;
 	private Point aPoint;
+	
+	/**
+	 * Initializes animations list, acceleration and speed. Runs the default constructor of Drawable.
+	 * 
+	 * @see Drawable
+	 */
 	
 	public Entity(){
 		super();
@@ -46,47 +54,112 @@ public class Entity extends Drawable {
 		currentAnimation = "";
 	}
 	
+	/**
+	 * Runs update() before drawing.
+	 * 
+	 * @see Drawable
+	 */
+	
+	@Override
+	public void draw(Graphics2D p){
+		update();
+		super.draw(p);
+	}
+	
+	/**
+	 * Adds an animation to the list of animations for this entity.
+	 * 
+	 * @param animationName name to identify the animation with
+	 * @param animation animation object to be added
+	 * @see Animation
+	 */
+	
 	public void addAnimation(String animationName, Animation animation){
 		myAnimations.put(animationName, animation);
 	}
+	
+	/**
+	 * Change the currently playing animation.
+	 * 
+	 * @param name animation name to change to
+	 * @see Animation
+	 */
 	
 	public void setAnimation(String name){
 		currentAnimation = name;
 	}
 	
+	/**
+	 * Supplies the list of animations.
+	 * 
+	 * @return list of animations
+	 */
+	
 	public Map<String, Animation> getAnimations(){
 		return myAnimations;
 	}
+	
+	/**
+	 * Supplies the current animation.
+	 * 
+	 * @return current animation name
+	 * @see Animation
+	 */
 	
 	public String getCurrentAnimation(){
 		return currentAnimation;
 	}
 	
-	@Override
-	public void setImage(BufferedImage image){
-		super.setImage(image);
+	/**
+	 * Changes the speed of the Entity based on the acceleration.
+	 */
+	
+	private void accelerate(){
+		dPoint.set(dPoint.getX()+aPoint.getX(), dPoint.getY()+aPoint.getY());	
 	}
 	
-	public void accelerate(){
-		dPoint.set(dPoint.getX()+aPoint.getX(),dPoint.getY()+aPoint.getY());	
-	}
+	/**
+	 * Changes the location of the entity based on the speed.
+	 */
 	
-	public void move(){
+	private void move(){
 		Point pos = this.getLocation();
-		pos.set(pos.getX()+dPoint.getX(),pos.getY()+dPoint.getY());
+		pos.set(pos.getX()+dPoint.getX(), pos.getY()+dPoint.getY());
 	}
+	
+	/**
+	 * Causes the Entity to accelerate, move, and to display the next animation frame.
+	 * 
+	 * @see Animation
+	 */
 	
 	public void update(){
 		accelerate();
 		move();
+		if(currentAnimation != "")
+			this.setImage(myAnimations.get(currentAnimation).getNextFrame());
 	}
+	
+	/**
+	 * Allows setting the acceleration.
+	 * 
+	 * @param accX x component of acceleration
+	 * @param accY y component of acceleration
+	 */
 	
 	public void setAccelleration(double accX, double accY){
-		dPoint.set(accX,accY);
+		dPoint.set(accX, accY);
 	}
 	
+	/**
+	 * Allows setting the speed.
+	 * 
+	 * @param dx delta x, the x component of velocity
+	 * @param dy delta y, the y componetn of velocity
+	 */
+	
 	public void setVelocity(double dx, double dy){
-		dPoint.set(dx,dy);
+		dPoint.set(dx, dy);
 	}
 	
 }
