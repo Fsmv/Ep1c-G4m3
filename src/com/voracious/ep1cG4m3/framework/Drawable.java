@@ -14,7 +14,7 @@ package com.voracious.ep1cG4m3.framework;
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
-
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
@@ -25,10 +25,20 @@ import java.awt.image.ImageObserver;
 
 import com.voracious.ep1cG4m3.utils.Point;
 
+/**
+ * Super class all classes that will be drawn must extend.
+ * 
+ * @author Voracious Softworks
+ */
+
 public class Drawable {
 	private BufferedImage myImage;
 	private boolean isVisible;
 	private Point myLocation;
+	
+	/**
+	 * Default Constructor, allows creating it then setting the values later.
+	 */
 	
 	public Drawable(){
 		myImage = (BufferedImage) null;
@@ -36,11 +46,24 @@ public class Drawable {
 		myLocation = new Point();
 	}
 	
+	/**
+	 * Constructor to initialize the image. It defaults to invisible and the location defaults to (-1, -1).
+	 * 
+	 * @param image Display image for the class
+	 */
+	
 	public Drawable(BufferedImage image){
 		myImage = image;
 		isVisible = false;
 		myLocation = new Point();
 	}
+	
+	/**
+	 * Allows initialization of both image and visibility. Location defaults to (-1, -1).
+	 * 
+	 * @param image Display image for the class
+	 * @param visible Whether the image should be visible or not 
+	 */
 	
 	public Drawable(BufferedImage image, boolean visible){
 		myImage = image;
@@ -48,32 +71,76 @@ public class Drawable {
 		myLocation = new Point();
 	}
 	
+	/**
+	 * Allows initialization of image, visibility and location.
+	 * 
+	 * @param image Display image for the class
+	 * @param visible Whether the image should be visible or not
+	 * @param point location
+	 */
+	
 	public Drawable(BufferedImage image, boolean visible, Point point){
 		myImage = image;
 		isVisible = visible;
 		myLocation = point;
 	}
 	
+	/**
+	 * If the image is set to be visible draw it to the screen
+	 * 
+	 * @param page Object to be drawn to
+	 */
+	
 	public void draw(Graphics2D page){
 		if(isVisible)
 			page.drawImage(myImage, (int)myLocation.getX(), (int)myLocation.getY(), (ImageObserver)null);
 	}
 	
+	/**
+	 * Set the image after initialization
+	 * 
+	 * @param image Display image for the class
+	 */
+	
 	public void setImage(BufferedImage image){
 		myImage = image;
 	}
+	
+	/**
+	 * Set the image visibility after initialization
+	 * 
+	 * @param visible Whether the image should be visible or not
+	 */
 	
 	public void setVisible(boolean visible){
 		isVisible = visible;
 	}
 	
+	/**
+	 * Supplies the image that it is set to display
+	 * 
+	 * @return Current image.
+	 */
+	
 	public BufferedImage getImage(){
 		return myImage;
 	}
 	
+	/**
+	 * Supplies the location the image will be displayed at.
+	 * 
+	 * @return Current location.
+	 */
+	
 	public Point getLocation(){
 		return myLocation;
 	}
+	
+	/**
+	 * Supplies the visibility status.
+	 * 
+	 * @return visibility
+	 */
 	
 	public boolean isVisible(){
 		return isVisible;
