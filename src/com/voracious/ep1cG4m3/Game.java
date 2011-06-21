@@ -21,6 +21,12 @@ package com.voracious.ep1cG4m3;
 
 import javax.swing.JApplet;
 
+/**
+ * Main class. It makes the window and handles screen switching.
+ * 
+ * @author Voracious Softworks
+ */
+
 public class Game extends JApplet {
 
 	/**

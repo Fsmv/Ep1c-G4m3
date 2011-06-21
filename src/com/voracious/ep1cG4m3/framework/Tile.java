@@ -29,10 +29,16 @@ import javax.imageio.ImageIO;
 
 import com.voracious.ep1cG4m3.utils.Point;
 
+/**
+ * Super class all Tile types must extend.
+ * 
+ * @author Voracious Softworks
+ * @see Drawable
+ */
+
 public class Tile extends Drawable {
 	
 	public static final String IMAGE_RESOURCE = "tiles.png";
-	
 	public static final int TILE_SIZE = 25;
 	
 	public static Map<String, Integer> types = new HashMap<String, Integer>();
@@ -40,13 +46,29 @@ public class Tile extends Drawable {
 	private String myType;
 	private int myId;
 	
+	/**
+	 * Adds the type to the global list of tile types. Initializes tile properties.
+	 * 
+	 * @param type Name for the tile type
+	 * @param tileId Incremental number for the tile
+	 */
+	
 	public Tile(String type, int tileId){
 		super(calculateImage(tileId), true);
-		types.put(type, new Integer(tileId));
+		if(!types.containsKey(type))
+			types.put(type, new Integer(tileId));
 		isTangible = false;
 		myType = type;
 		myId = tileId;
 	}
+	
+	/**
+	 * Adds the type to the global list of tile types and sets location. Initializes tile properties.
+	 * 
+	 * @param type Name for the tile type
+	 * @param tileId Incremental number for the tile
+	 * @param point Location for the tile 
+	 */
 	
 	public Tile(String type, int tileId, Point point){
 		super(calculateImage(tileId), true, point);
@@ -56,6 +78,15 @@ public class Tile extends Drawable {
 		myId = tileId;
 	}
 	
+	/**
+	 * Adds the type to the global list of tile types, sets location and sets tangibility. 
+	 * 
+	 * @param type Name for the tile type
+	 * @param tileId Incremental number for the tile
+	 * @param point Location for the tile 
+	 * @param tangible Whether entities can interact with this tile or not
+	 */
+	
 	public Tile(String type, int tileId, Point point, boolean tangible){
 		super(calculateImage(tileId), true, point);
 		types.put(type, new Integer(tileId));
@@ -63,6 +94,13 @@ public class Tile extends Drawable {
 		myType = type;
 		myId = tileId;
 	}
+	
+	/**
+	 * Used to find the tile's image in the main source image.
+	 * 
+	 * @param id Tile id to find the image for
+	 * @return The image for the tile with the id specified
+	 */
 	
 	private static BufferedImage calculateImage(int id){
 		try {
@@ -75,23 +113,53 @@ public class Tile extends Drawable {
 		}
 	}
 	
-	//TODO: Make hitTest actually test if the entity is hitting the block.
+	/**
+	 * Tests if an entity is in contact with the tile 
+	 * 
+	 * @param entity Entity to test
+	 * @return Whether or not it is in contact with the tile.
+	 */
+	
+	//TODO: Make hitTest actually work. Not just be a copy of isTangible()
 	public boolean hitTest(Entity entity){
 		return isTangible();
 	}
+	
+	/**
+	 * Change whether the tile is tangible or not.
+	 * 
+	 * @param tangible Whether entities can interact with this tile or not
+	 */
 	
 	public void setTangible(boolean tangible){
 		isTangible = tangible;
 	}
 	
+	/**
+	 * Supply whether the tile is tangible or not.
+	 * 
+	 * @return wether the tile is tangible or not.
+	 */
 	
 	public boolean isTangible(){
 		return isTangible;
 	}
 	
+	/**
+	 * Supply the type of the tile
+	 * 
+	 * @return tile type
+	 */
+	
 	public String getType(){
 		return myType;	
 	}
+	
+	/**
+	 * Supply the type id of the tile
+	 * 
+	 * @return tile type id.
+	 */
 	
 	public int getId(){
 		return myId;	
