@@ -1,5 +1,6 @@
 package com.voracious.ep1cG4m3.framework;
 
+
 /*  
  *  Ep1c G4m3 -- A parody platformer
  * 
@@ -19,8 +20,69 @@ package com.voracious.ep1cG4m3.framework;
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
+/**
+ * Framework class that creates the general model for the enemies and characters.
+ * 
+ * @author Voracious Softworks
+ * @version 6/20/2011
+ */
+
+import java.util.Map;
+import java.awt.image.BufferedImage;
+import com.voracious.ep1cG4m3.utils.Point;
+import com.voracious.ep1cG4m3.utils.Animation;;
 public class Entity extends Drawable {
+	
+	
+	private Map myAnimations; //TODO:Parameterize Map, as suggested by the warning.
+	private String currentAnimation;
+	private Point dPoint;
+	private Point aPoint;
+	
 	public Entity(){
 		super();
 	}
+	
+	public void addAnimation(Animation animation, String animationName){
+		
+	}
+	
+	public void setAnimation(String name){
+		
+	}
+	
+	public Map getAnimations(){
+		return myAnimations;
+	}
+	
+	public String getCurrentAnimation(){
+		return currentAnimation;
+	}
+	
+	public void setImage(BufferedImage image){
+		super.setImage(image);
+	}
+	
+	public void accelerate(){
+		dPoint.set(dPoint.getX()+aPoint.getX(),dPoint.getY()+aPoint.getY());	
+	}
+	
+	public void move(){
+		Point pos = this.getLocation();
+		pos.set(pos.getX()+dPoint.getX(),pos.getY()+dPoint.getY());
+	}
+	
+	public void update(){
+		accelerate();
+		move();
+	}
+	
+	public void setAccelleration(double accX, double accY){
+		dPoint.set(accX,accY);
+	}
+	
+	public void setVelocity(double dx, double dy){
+		dPoint.set(dx,dy);
+	}
+	
 }
