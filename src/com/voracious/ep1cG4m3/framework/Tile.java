@@ -111,7 +111,7 @@ public class Tile extends Drawable {
 	private static BufferedImage calculateImage(int id){
 		try {
 			BufferedImage img = ImageIO.read(new File("/res/", IMAGE_RESOURCE));
-			img = img.getSubimage(img.getWidth()*(id*TILE_SIZE), img.getHeight()*(id*TILE_SIZE), TILE_SIZE, TILE_SIZE);
+			img = img.getSubimage(img.getWidth()%(id*TILE_SIZE), img.getHeight()%(id*TILE_SIZE), TILE_SIZE, TILE_SIZE);
 			return img;
 		} catch (IOException e) {
 			e.printStackTrace();
