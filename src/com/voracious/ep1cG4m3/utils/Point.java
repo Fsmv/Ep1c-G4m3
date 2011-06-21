@@ -40,7 +40,7 @@ public class Point {
 	}
 	
 	/**
-	 * Constructor to allow setting the values on creation
+	 * Constructor to allow setting the values on creation.
 	 * 
 	 * @param x x-coordinate to set as this
 	 * @param y y-coordinate to set as this
@@ -68,7 +68,7 @@ public class Point {
 	}
 	
 	/**
-	 * Changes the stored coordinate values of this to p
+	 * Changes the stored coordinate values of this to the supplied value.
 	 * 
 	 * @param p Point object to set this to
 	 */
@@ -79,7 +79,7 @@ public class Point {
 	}
 	
 	/**
-	 * Changes the stored coordinate values of this to (x, y)
+	 * Changes the stored coordinate values of this to (x, y).
 	 * 
 	 * @param x x-coordinate to switch this to
 	 * @param y y-coordinate to switch this to
@@ -91,7 +91,7 @@ public class Point {
 	}
 	
 	/**
-	 * Changes the stored x-coordinate value without changing the y-coordinate value
+	 * Changes the stored x-coordinate value without changing the y-coordinate value.
 	 * 
 	 * @param x x-coordinate to switch this to
 	 */
@@ -101,7 +101,7 @@ public class Point {
 	}
 	
 	/**
-	 * Changes the stored y-coordinate value without changing the x-coordinate value
+	 * Changes the stored y-coordinate value without changing the x-coordinate value.
 	 * 
 	 * @param y y-coordinate to switch this to
 	 */
