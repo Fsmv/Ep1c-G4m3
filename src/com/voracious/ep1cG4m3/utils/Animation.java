@@ -19,41 +19,98 @@ package com.voracious.ep1cG4m3.utils;
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
+/**
+ * Utility class for storing and playing an animation.
+ * 
+ * @author Voracious Softworks
+ */
 
 public class Animation {
 	private int currentFrame;
-	private ArrayList<Image> myFrames;
+	private ArrayList<BufferedImage> myFrames;
+	
+	/**
+	 * Default Constructor, allows creating it then setting the values later.
+	 */
 	
 	public Animation(){
-		myFrames = new ArrayList<Image>();
+		myFrames = new ArrayList<BufferedImage>();
 		currentFrame = 0;
 	}
 	
-	public Animation(ArrayList<Image> frames){
+	/**
+	 * Initialize the class with the frames already in an ArrayList.
+	 * 
+	 * @param frames List of images to be used as frames
+	 */
+	
+	public Animation(ArrayList<BufferedImage> frames){
 		myFrames = frames;
 		currentFrame = 0;
 	}
 	
-	public void add(Image frame){
+	/**
+	 * Appends a frame to the end of the frame list.
+	 * 
+	 * @param frame Image to be added
+	 */
+	
+	public void add(BufferedImage frame){
 		myFrames.add(frame);
 	}
+	
+	/**
+	 * Supplies the next frame number.
+	 * 
+	 * @return The frame number that will be returned next
+	 */
 	
 	public int getCurrentFrame(){
 		return currentFrame;
 	}
 	
+	/**
+	 * Supplies the number of frames in the animation.
+	 * 
+	 * @return Total number of frames in the animation
+	 */
+	
 	public int getNumFrames(){
 		return myFrames.size();
 	}
 	
-	public Image getNextFrame(){
+	/**
+	 * Supplies a specific frame.
+	 * 
+	 * @param frame Frame number that should be returned
+	 * @return The requested frame image
+	 */
+	
+	public BufferedImage getFrame(int frame){
+		return myFrames.get(frame);
+	}
+	
+	/**
+	 * Increments the frame number and returns the next frame. Can be used in a loop to play the animation.
+	 * 
+	 * @return Image of the next frame
+	 */
+	
+	public BufferedImage getNextFrame(){
 		currentFrame++;
 		if(currentFrame > getNumFrames())
 			currentFrame = 0;
 		return myFrames.get(currentFrame-1);
 	}
+	
+	/**
+	 * Changes the current frame to the supplied value.
+	 * 
+	 * @param frame frame to switch to
+	 */
 	
 	public void gotoFrame(int frame){
 		currentFrame = frame;
