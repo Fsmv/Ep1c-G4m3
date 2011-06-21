@@ -25,6 +25,8 @@ import javax.swing.JApplet;
  * Main class. It makes the window and handles screen switching.
  * 
  * @author Voracious Softworks
+ * @version 6/20/2011
+ * @see JApplet
  */
 
 public class Game extends JApplet {

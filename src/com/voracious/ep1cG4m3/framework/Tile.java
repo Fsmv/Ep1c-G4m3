@@ -33,6 +33,7 @@ import com.voracious.ep1cG4m3.utils.Point;
  * Super class all Tile types must extend.
  * 
  * @author Voracious Softworks
+ * @version 6/20/2011
  * @see Drawable
  */
 
@@ -67,7 +68,8 @@ public class Tile extends Drawable {
 	 * 
 	 * @param type Name for the tile type
 	 * @param tileId Incremental number for the tile
-	 * @param point Location for the tile 
+	 * @param point Location for the tile
+	 * @see Point
 	 */
 	
 	public Tile(String type, int tileId, Point point){
@@ -85,6 +87,7 @@ public class Tile extends Drawable {
 	 * @param tileId Incremental number for the tile
 	 * @param point Location for the tile 
 	 * @param tangible Whether entities can interact with this tile or not
+	 * @see Point
 	 */
 	
 	public Tile(String type, int tileId, Point point, boolean tangible){
@@ -118,6 +121,7 @@ public class Tile extends Drawable {
 	 * 
 	 * @param entity Entity to test
 	 * @return Whether or not it is in contact with the tile.
+	 * @see Entity
 	 */
 	
 	//TODO: Make hitTest actually work. Not just be a copy of isTangible()
