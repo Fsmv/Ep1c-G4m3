@@ -1,11 +1,8 @@
 package com.voracious.ep1cG4m3.utils;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import com.voracious.ep1cG4m3.framework.Drawable;
 
@@ -17,9 +14,10 @@ import com.voracious.ep1cG4m3.framework.Drawable;
 
 public class Text extends Drawable {
 	
-	public static final String IMAGE_RESOURCE = "font.png";
 	public static final int FONT_WIDTH = 5;
 	public static final int FONT_HEIGHT = 7;
+	
+	public static BufferedImage fontImg;
 	
 	private String myText;
 	private int mySpacing;
@@ -41,7 +39,7 @@ public class Text extends Drawable {
 	 */
 	
 	public Text(String text){
-		super(parseString(text), true);
+		super(parseString(text, 7, 1), true);
 	}
 	
 	/**
@@ -52,7 +50,15 @@ public class Text extends Drawable {
 	 */
 	
 	public Text(String text, Point point){
-		super(parseString(text), true, point);
+		super(parseString(text, 7, 1), true, point);
+	}
+	
+	public Text(String text, Point point, int size, int spacing){
+		super(parseString(text, size, spacing), true, point);
+	}
+	
+	public static void setFont(BufferedImage image){
+		fontImg = image;
 	}
 	
 	/**
@@ -62,31 +68,45 @@ public class Text extends Drawable {
 	 * @return string converted into an image
 	 */
 	
-	public static BufferedImage parseString(String text){
-		try {
-			BufferedImage fontImg = ImageIO.read(new File("/res/", IMAGE_RESOURCE));
-			/* This line could be usefull: img = img.getSubimage(x, y, width, height);
-			 * Do everything within the try{} block
-			 * I'm sorry I'm not sure how to create an image and append to it. But here is the BufferedImage
-			 * Documentation: http://download.oracle.com/javase/1.4.2/docs/api/java/awt/image/BufferedImage.html
-			 * You could at least write the rest of it and leave a todo comment and I'll figure it out.
-			 */
-			return fontImg;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} //TODO: Implement method completely
-		/*
-		 * The letters are in ascii order starting at number 32 and going to 176.
-		 * So, they can be found by looping through the string and
-		 * converting each character into and int. Then the letter graphic if the int is > 176 set it equal to 177,
-		 * the location of the fallback character. the position you want will be at: (math unverified)
-		 * (fontImg.getWidth()%(FONT_WIDTH*((int)char-32)), fontImg.getHeight()%(FONT_HEIGHT*((int)char-32)))
-		 * Get all the letter images and concatinate into one larger image with the space inbetween them as
-		 * mySpacing. Then scale the image to: newHeight=LETTER_HEIGHT+mySize; newWidth=(LETTER_WIDTH+mySize)*text.length
-		 * Finally add a filter on the image of myColor at opacity 99% (Hopefully the transparent parts won't change. 
-		 * if they do we'll just remove the color option.). 
-		 */
+	public static BufferedImage parseString(String text, int size, int spacing){
+			int numLines = 1;
+			int maxCharsPerLine = 0;
+			
+			int tempCount = 0;
+			for(int i=0; i<text.length(); i++){
+				char tempChar = text.charAt(i);
+				
+				if(tempChar == '\n'){
+					numLines++;
+					tempCount = 0;
+				}else{
+					tempCount++;
+				}
+
+				if(tempCount > maxCharsPerLine)
+					maxCharsPerLine = tempCount;
+			}
+			
+			BufferedImage result = new BufferedImage(FONT_WIDTH*maxCharsPerLine + (maxCharsPerLine-1)*spacing, (FONT_HEIGHT+1)*numLines, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g2 = result.createGraphics();
+			
+			int currentLine = 0;
+			int currentCharInLine = 0;
+			for(int i=0; i<text.length(); i++){
+				if(text.charAt(i) == '\n'){
+					currentLine++;
+					currentCharInLine = 0;
+				}else{
+					int charCode = (int)text.charAt(i);
+					if(charCode < 32 && charCode > 176){
+						charCode = 177; //This is the fallback character.
+					}
+					g2.drawImage(fontImg.getSubimage(((charCode-32)%(fontImg.getWidth()/FONT_WIDTH))*FONT_WIDTH,((charCode-32)/(fontImg.getWidth()/FONT_WIDTH))*FONT_HEIGHT,FONT_WIDTH,FONT_HEIGHT),null,FONT_WIDTH*currentCharInLine + currentCharInLine,FONT_HEIGHT*currentLine + currentLine);
+					currentCharInLine++;
+				}
+			}
+			g2.dispose();
+			return result;
 	}
 	
 	/**
@@ -97,7 +117,7 @@ public class Text extends Drawable {
 	
 	public void setText(String text){
 		myText = text;
-		setImage(parseString(text));
+		setImage(parseString(text, getSize(), getSpacing()));
 	}
 	
 	/**
@@ -109,7 +129,7 @@ public class Text extends Drawable {
 	public void setSpacing(int spacing){
 		if(spacing >= 0){
 			mySpacing = spacing;
-			setImage(parseString(myText));
+			setImage(parseString(myText, getSize(), getSpacing()));
 		}
 	}
 	
@@ -120,7 +140,10 @@ public class Text extends Drawable {
 	 */
 	
 	public void setSize(int size){
-		mySize = size;
+		if(size > 0){
+			mySize = size;
+			setImage(parseString(myText, getSize(), getSpacing()));
+		}
 	}
 	
 	/**

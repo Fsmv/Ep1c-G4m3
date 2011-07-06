@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import com.voracious.ep1cG4m3.framework.Screen;
 import com.voracious.ep1cG4m3.framework.Drawable;
 import com.voracious.ep1cG4m3.utils.Point;
+import com.voracious.ep1cG4m3.utils.Text;
 import com.voracious.ep1cG4m3.utils.ScreenResultEvent;
 
 /**
@@ -53,6 +54,7 @@ public class Menu extends Screen{
 	
 	private Mouse mouseListener;
 	private ArrayList<Drawable> gui;
+	private Text test;
 	
 	/**
 	 * Sets id to be returned for identifying in the calling class and the class that will be returned to.
@@ -66,6 +68,15 @@ public class Menu extends Screen{
 		super(id, listener);
 		mouseListener = new Mouse();
 		gui = new ArrayList<Drawable>();
+	}
+	
+	/**
+	 * @see Screen
+	 */
+	
+	@Override
+	public void start() {
+		addMouseListener(mouseListener);
 		
 		BufferedImage temp = new BufferedImage(400, 75, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2 = temp.createGraphics();
@@ -93,15 +104,8 @@ public class Menu extends Screen{
 		g2.drawRect(0, 0, 399, 74);
 		g2.drawString("Level Editor", 10, 20);
 		gui.add(new Drawable(temp, true, new Point(50, 240)));
-	}
-	
-	/**
-	 * @see Screen
-	 */
-	
-	@Override
-	public void start() {
-		addMouseListener(mouseListener);
+		
+		test = new Text("The quick brown fox" + '\n' + "Jumped over the lazy sheep dog.", new Point(150, 55));
 	}
 	
 	/**
@@ -121,13 +125,15 @@ public class Menu extends Screen{
 	public void paint(Graphics g) {
 		super.paint(g);
 		Graphics2D g2 = (Graphics2D) g;
-	    
+		
 		g2.setFont(new Font("Sans-serif", Font.PLAIN, 25));
 	    g2.drawString("Menu", 10, 35);
 	    
 	    for(int i=0; i<gui.size(); i++){
 	    	gui.get(i).draw(g2);
 	    }
+	    
+	    test.draw(g2);
 	    
 	    Toolkit.getDefaultToolkit().sync();
 	    g.dispose();
