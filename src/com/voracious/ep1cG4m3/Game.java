@@ -66,7 +66,7 @@ public class Game extends JFrame implements ScreenResultEvent {
 		setSize(500, 400);
 		setLocationRelativeTo(null);
 		setVisible(true);
-		setResizable(false);
+		setResizable(true);
 		
 		loader = new Preloader(ID_LOADER, this);
 		menu = new Menu(ID_MENU, this);
@@ -77,17 +77,21 @@ public class Game extends JFrame implements ScreenResultEvent {
 		
 		cards = new JPanel(new CardLayout());
 		
-		cards.add(loader, "loader");
+		cards.add(getScreenFromId(ID_LOADER), "loader");
 		cards.add(getScreenFromId(ID_MENU), "menu");
 		cards.add(getScreenFromId(ID_PLAY), "play");
 		cards.add(getScreenFromId(ID_INSTRUCTIONS), "instructions");
 		cards.add(getScreenFromId(ID_LEVEL_EDITOR), "level editor");
-		loader.start();
-		
+		getScreenFromId(getCurrentScreenId()).start();
 		add(cards);
-		switchCurrentScreen(ID_LOADER);
+		
 		images = loader.loadImages(filePaths);
 		sendImages();
+		try {
+			Thread.sleep(2500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		switchCurrentScreen(ID_MENU);
 	}
 	

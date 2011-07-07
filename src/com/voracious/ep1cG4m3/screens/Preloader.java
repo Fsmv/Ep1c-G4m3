@@ -1,22 +1,31 @@
 package com.voracious.ep1cG4m3.screens;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
+import com.voracious.ep1cG4m3.framework.Drawable;
 import com.voracious.ep1cG4m3.framework.Screen;
+import com.voracious.ep1cG4m3.utils.Point;
 import com.voracious.ep1cG4m3.utils.ScreenResultEvent;
 
 public class Preloader extends Screen {
 	private static final long serialVersionUID = 1333992802820959184L;
 	private MediaTracker tracker;
-	private Image bg;
+	private Drawable bg;
 
 	public Preloader(int id, ScreenResultEvent listener) {
 		super(id, listener);
 		tracker = new MediaTracker(this);
+		bg = new Drawable();
+		String file[] = {"/loadImage.png"};
+		BufferedImage temp = loadImages(file)[0];
+		bg.setImage(temp);
+		bg.setVisible(true);
+		bg.setLocation(new Point(0, 0));
 	}
 	
 	public BufferedImage[] loadImages(String[] filePaths){
@@ -37,8 +46,6 @@ public class Preloader extends Screen {
 
 	@Override
 	public void start() {
-		Image bg = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/loadImage.png"));
-		tracker.addImage(bg, -1);
 	}
 
 	@Override
@@ -48,9 +55,10 @@ public class Preloader extends Screen {
 	
 	@Override
 	public void paint(Graphics g){
-		try{
-			tracker.waitForID(-1);
-			g.drawImage(bg, 0, 0, null);
-		}catch (InterruptedException e) { e.printStackTrace();}
+		Graphics2D g2 = (Graphics2D)g;
+		bg.draw(g2);
+		
+		Toolkit.getDefaultToolkit().sync();
+		g.dispose();
 	}
 }

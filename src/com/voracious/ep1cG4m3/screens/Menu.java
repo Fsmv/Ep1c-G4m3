@@ -20,7 +20,6 @@ package com.voracious.ep1cG4m3.screens;
  */
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
@@ -54,7 +53,6 @@ public class Menu extends Screen{
 	
 	private Mouse mouseListener;
 	private ArrayList<Drawable> gui;
-	private Text test;
 	
 	/**
 	 * Sets id to be returned for identifying in the calling class and the class that will be returned to.
@@ -78,14 +76,16 @@ public class Menu extends Screen{
 	public void start() {
 		addMouseListener(mouseListener);
 		
+		gui.add(new Text("Menu", new Point(5, 10), 25, 1, Color.BLACK));
+		
 		BufferedImage temp = new BufferedImage(400, 75, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2 = temp.createGraphics();
 		g2.setColor(Color.BLUE);
 		g2.fillRect(0, 0, 400, 75);
 		g2.setColor(Color.BLACK);
 		g2.drawRect(0, 0, 399, 74);
-		g2.drawString("Play", 10, 20);
 		gui.add(new Drawable(temp, true, new Point(50, 50)));
+		gui.add(new Text("Start", new Point(60, 80), 15, 1, Color.BLACK));
 		
 		temp = new BufferedImage(400, 75, BufferedImage.TYPE_INT_RGB);
 		g2 = temp.createGraphics();
@@ -93,8 +93,8 @@ public class Menu extends Screen{
 		g2.fillRect(0, 0, 400, 75);
 		g2.setColor(Color.BLACK);
 		g2.drawRect(0, 0, 399, 74);
-		g2.drawString("Instructions", 10, 20);
 		gui.add(new Drawable(temp, true, new Point(50, 145)));
+		gui.add(new Text("Instructions", new Point(60, 175), 15, 1, Color.BLACK));
 		
 		temp = new BufferedImage(400, 75, BufferedImage.TYPE_INT_RGB);
 		g2 = temp.createGraphics();
@@ -102,10 +102,8 @@ public class Menu extends Screen{
 		g2.fillRect(0, 0, 400, 75);
 		g2.setColor(Color.BLACK);
 		g2.drawRect(0, 0, 399, 74);
-		g2.drawString("Level Editor", 10, 20);
 		gui.add(new Drawable(temp, true, new Point(50, 240)));
-		
-		test = new Text("The quick brown fox" + '\n' + "Jumped over the lazy sheep dog.", new Point(150, 55));
+		gui.add(new Text("Level Editor", new Point(60, 270), 15, 1, Color.BLACK));
 	}
 	
 	/**
@@ -115,6 +113,8 @@ public class Menu extends Screen{
 	@Override
 	public void stop(){
 		removeMouseListener(mouseListener);
+		for(int i=0; i<gui.size(); i++)
+			gui.remove(i);
 	}
 	
 	/**
@@ -125,15 +125,10 @@ public class Menu extends Screen{
 	public void paint(Graphics g) {
 		super.paint(g);
 		Graphics2D g2 = (Graphics2D) g;
-		
-		g2.setFont(new Font("Sans-serif", Font.PLAIN, 25));
-	    g2.drawString("Menu", 10, 35);
 	    
 	    for(int i=0; i<gui.size(); i++){
 	    	gui.get(i).draw(g2);
 	    }
-	    
-	    test.draw(g2);
 	    
 	    Toolkit.getDefaultToolkit().sync();
 	    g.dispose();
