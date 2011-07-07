@@ -118,6 +118,10 @@ public class Drawable {
 		isVisible = visible;
 	}
 	
+	public void setLocation(Point location){
+		myLocation = location;
+	}
+	
 	/**
 	 * Supplies the image that it is set to display
 	 * 
