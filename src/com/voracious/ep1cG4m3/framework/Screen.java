@@ -1,7 +1,5 @@
 package com.voracious.ep1cG4m3.framework;
 
-import java.awt.Graphics;
-
 import javax.swing.JPanel;
 
 import com.voracious.ep1cG4m3.utils.ScreenResultEvent;
@@ -75,16 +73,5 @@ public abstract class Screen extends JPanel {
 	
 	protected void dispatchResult(int type){
 		myListener.onScreenResult(getId(), type);
-	}
-	
-	/**
-	 * Put everything that needs to be drawn here it will be called once.
-	 * 
-	 * @param g Graphics object things should be drawn to.
-	 */
-	
-	@Override
-	public void paint(Graphics g){
-		super.paint(g);
 	}
 }

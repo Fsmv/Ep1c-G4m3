@@ -54,10 +54,11 @@ public class Preloader extends Screen {
 	}
 	
 	@Override
-	public void paint(Graphics g){
+	public void paintComponent(Graphics g){
 		Graphics2D g2 = (Graphics2D)g;
 		bg.draw(g2);
 		
+		super.paintComponent(g);
 		Toolkit.getDefaultToolkit().sync();
 		g.dispose();
 	}
