@@ -24,10 +24,10 @@ public class LevelEditor extends Screen {
 	}
 	
 	@Override
-	public void paint(Graphics g){
-		super.paint(g);
+	public void paintComponent(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
 		g2.drawString("LevelEditor", 10, 25);
+		super.paintComponent(g);
 	}
 
 }

@@ -76,7 +76,10 @@ public class Menu extends Screen{
 	public void start() {
 		addMouseListener(mouseListener);
 		
-		gui.add(new Text("Menu", new Point(5, 10), 25, 1, Color.BLACK));
+		/*
+		 * The button that was clicked is determined by the button's index. 
+		 * Do not change their order or add anything before them without changing the RESULT_[NAME] variables.
+		 */
 		
 		BufferedImage temp = new BufferedImage(400, 75, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2 = temp.createGraphics();
@@ -104,6 +107,8 @@ public class Menu extends Screen{
 		g2.drawRect(0, 0, 399, 74);
 		gui.add(new Drawable(temp, true, new Point(50, 240)));
 		gui.add(new Text("Level Editor", new Point(60, 270), 15, 1, Color.BLACK));
+		
+		gui.add(new Text("Menu", new Point(5, 10), 25, 1, Color.BLACK));
 	}
 	
 	/**
@@ -122,14 +127,13 @@ public class Menu extends Screen{
 	 */
 	
 	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
+	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 	    
 	    for(int i=0; i<gui.size(); i++){
 	    	gui.get(i).draw(g2);
 	    }
-	    
+	    super.paintComponent(g);
 	    Toolkit.getDefaultToolkit().sync();
 	    g.dispose();
 	}
