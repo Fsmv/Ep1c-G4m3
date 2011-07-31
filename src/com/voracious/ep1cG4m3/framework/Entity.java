@@ -22,6 +22,7 @@ package com.voracious.ep1cG4m3.framework;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 import com.voracious.ep1cG4m3.utils.Point;
 import com.voracious.ep1cG4m3.utils.Animation;
@@ -40,6 +41,10 @@ public class Entity extends Drawable {
 	private Point dPoint;
 	private Point aPoint;
 	
+	public static final int WIDTH = 25;
+	public static final int HEIGHT = 50;
+	public static BufferedImage sourceImage;
+	
 	/**
 	 * Initializes animations list, acceleration and speed. Runs the default constructor of Drawable.
 	 * 
@@ -47,7 +52,7 @@ public class Entity extends Drawable {
 	 */
 	
 	public Entity(){
-		super();
+		super(calculateFrames(), true);
 		myAnimations = new HashMap<String, Animation>();
 		dPoint = new Point(0, 0);
 		aPoint = new Point(0, 0);
@@ -148,18 +153,38 @@ public class Entity extends Drawable {
 	 */
 	
 	public void setAccelleration(double accX, double accY){
-		dPoint.set(accX, accY);
+		aPoint.set(accX, accY);
 	}
 	
 	/**
 	 * Allows setting the speed.
 	 * 
 	 * @param dx delta x, the x component of velocity
-	 * @param dy delta y, the y componetn of velocity
+	 * @param dy delta y, the y component of velocity
 	 */
 	
 	public void setVelocity(double dx, double dy){
 		dPoint.set(dx, dy);
 	}
 	
+	public static void setAnimationSource(BufferedImage source){
+		sourceImage = source;
+	}
+	
+	public static BufferedImage calculateFrames(){
+		if(sourceImage != null)
+			return (sourceImage.getSubimage((0%(sourceImage.getWidth()/(WIDTH)))*(WIDTH), (0/(sourceImage.getWidth()/(WIDTH)))*(WIDTH), (WIDTH), (HEIGHT)));
+		else{
+			System.out.println("null");
+			return null;
+		}
+	}
+
+	public Point getAccelleration(){
+		return aPoint;
+	}
+	
+	public Point getVelocity(){
+		return dPoint;
+	}
 }
