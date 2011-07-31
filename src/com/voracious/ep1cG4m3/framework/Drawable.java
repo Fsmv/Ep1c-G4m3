@@ -20,6 +20,7 @@ package com.voracious.ep1cG4m3.framework;
  */
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 
@@ -141,6 +142,10 @@ public class Drawable {
 	
 	public Point getLocation(){
 		return myLocation;
+	}
+	
+	public Rectangle getBounds(){
+		return new Rectangle((int)getLocation().getX(), (int)getLocation().getY(), getImage().getWidth(), getImage().getHeight());
 	}
 	
 	/**

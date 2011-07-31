@@ -20,7 +20,34 @@ package com.voracious.ep1cG4m3.entities;
  */
 
 import com.voracious.ep1cG4m3.framework.Entity;
+import com.voracious.ep1cG4m3.utils.Point;
 
 public class Player extends Entity {
-
+	public static final int WIDTH = 25;
+	public static final int HEIGHT = 50;
+	
+	public boolean falling = false;
+	
+	public Player(){
+		super();
+	}
+	
+	public void jump(){
+		falling = true;
+		Point vel = getVelocity();
+		Point acc = getAccelleration();
+		setVelocity(vel.getX(), vel.getY()-10);
+		setAccelleration(acc.getX(), acc.getY()-2);
+	}
+	
+	@Override
+	public void update(){
+		Point vel = getVelocity();
+		Point acc = getAccelleration();
+		if(falling){
+			if(vel.getY() > 15)
+				setAccelleration(acc.getX(), acc.getY()+2);
+		}
+		super.update();
+	}
 }
