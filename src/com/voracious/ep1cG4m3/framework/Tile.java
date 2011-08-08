@@ -19,6 +19,7 @@ package com.voracious.ep1cG4m3.framework;
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 /**
@@ -65,7 +66,12 @@ public class Tile extends Drawable implements Cloneable {
 	 */
 	
 	public boolean hitTest(Entity entity){
-		return getBounds().intersects(entity.getBounds());
+		Rectangle mBounds = getBounds();
+		Rectangle eBounds = entity.getBounds();
+		return mBounds.intersects(eBounds) || ((mBounds.getX()+mBounds.getWidth()) >= eBounds.getX() && 
+				mBounds.getX() <= (eBounds.getX()+eBounds.getWidth()) &&
+				(mBounds.getY()+mBounds.getHeight()) >= eBounds.getY() &&
+				mBounds.getY() <= (eBounds.getY()+eBounds.getWidth()));
 	}
 	
 	/**

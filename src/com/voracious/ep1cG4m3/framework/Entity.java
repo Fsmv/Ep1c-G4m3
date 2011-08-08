@@ -22,9 +22,9 @@ package com.voracious.ep1cG4m3.framework;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-import com.voracious.ep1cG4m3.utils.Point;
 import com.voracious.ep1cG4m3.utils.Animation;
 
 /**
@@ -120,7 +120,7 @@ public class Entity extends Drawable {
 	 */
 	
 	private void accelerate(){
-		dPoint.set(dPoint.getX()+aPoint.getX(), dPoint.getY()+aPoint.getY());	
+		dPoint.setLocation(dPoint.getX()+aPoint.getX(), dPoint.getY()+aPoint.getY());	
 	}
 	
 	/**
@@ -129,7 +129,7 @@ public class Entity extends Drawable {
 	
 	private void move(){
 		Point pos = this.getLocation();
-		pos.set(pos.getX()+dPoint.getX(), pos.getY()+dPoint.getY());
+		pos.setLocation(pos.getX()+dPoint.getX(), pos.getY()+dPoint.getY());
 	}
 	
 	/**
@@ -153,7 +153,7 @@ public class Entity extends Drawable {
 	 */
 	
 	public void setAccelleration(double accX, double accY){
-		aPoint.set(accX, accY);
+		aPoint.setLocation(accX, accY);
 	}
 	
 	/**
@@ -164,7 +164,7 @@ public class Entity extends Drawable {
 	 */
 	
 	public void setVelocity(double dx, double dy){
-		dPoint.set(dx, dy);
+		dPoint.setLocation(dx, dy);
 	}
 	
 	public static void setAnimationSource(BufferedImage source){

@@ -67,24 +67,16 @@ public class Game extends JFrame implements ScreenResultEvent {
 		setResizable(true);
 		
 		loader = new Preloader(ID_LOADER, this);
-		loader.setVisible(true);
-		loader.setOpaque(false);
 		loader.setPreferredSize(new Dimension(640, 512));
 		menu = new Menu(ID_MENU, this);
-		menu.setVisible(true);
-		menu.setOpaque(false);
 		menu.setPreferredSize(new Dimension(640, 512));
 		play = new Play(ID_PLAY, this);
-		play.setVisible(true);
-		play.setOpaque(false);
+		play.setFocusable(true);
+		play.setFocusTraversalKeysEnabled(false);
 		play.setPreferredSize(new Dimension(640, 512));
 		instructions = new Instructions(ID_INSTRUCTIONS, this);
-		instructions.setVisible(true);
-		instructions.setOpaque(false);
 		instructions.setPreferredSize(new Dimension(640, 512));
 		levelEditor = new LevelEditor(ID_LEVEL_EDITOR, this);
-		levelEditor.setVisible(true);
-		levelEditor.setOpaque(false);
 		levelEditor.setPreferredSize(new Dimension(640, 512));
 		
 		currentScreen = ID_LOADER;

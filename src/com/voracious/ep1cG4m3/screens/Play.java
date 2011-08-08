@@ -3,6 +3,7 @@ package com.voracious.ep1cG4m3.screens;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -18,7 +19,6 @@ import com.voracious.ep1cG4m3.framework.Entity;
 import com.voracious.ep1cG4m3.framework.Screen;
 import com.voracious.ep1cG4m3.framework.Tile;
 import com.voracious.ep1cG4m3.framework.TileFactory;
-import com.voracious.ep1cG4m3.utils.Point;
 import com.voracious.ep1cG4m3.utils.ScreenResultEvent;
 
 public class Play extends Screen implements ActionListener{
@@ -50,24 +50,35 @@ public class Play extends Screen implements ActionListener{
 	public void start() {
 		player = new Player();
 		loadLevel(currentLevel, currentWorld);
-		for(int r=0; r<entitiesStart.length; r++){
-			for(int c=0; c<entitiesStart[0].length; c++){
-				if(entitiesStart[r][c] == 1){
-					player.setLocation(new Point(c*TileFactory.TILE_SIZE,(r*TileFactory.TILE_SIZE)-Player.HEIGHT));
-				}
-			}
-		}
 		timer.start();
+		requestFocusInWindow();
 		addKeyListener(new KeyAdapter() {
+			boolean holdingA = false;
+			boolean holdingD = false;
+			
+			public void keyPressed(KeyEvent e){
+				if(e.getKeyCode() == KeyEvent.VK_A){
+                	holdingA = true;
+                	player.setVelocity(-3, player.getVelocity().getY());
+                }else if(e.getKeyCode() == KeyEvent.VK_D){
+                	holdingD = true;
+                	player.setVelocity(3, player.getVelocity().getY());
+                }
+			}
+			
             public void keyReleased(KeyEvent e) {
                 if(e.getKeyCode() == KeyEvent.VK_W){
                 	player.jump();
                 }else if(e.getKeyCode() == KeyEvent.VK_A){
-                	
-                }else if(e.getKeyCode() == KeyEvent.VK_S){
-                	
+                	if(holdingA){
+                		holdingA = false;
+                		player.setVelocity(0, player.getVelocity().getY());
+                	}
                 }else if(e.getKeyCode() == KeyEvent.VK_D){
-                	
+                	if(holdingD){
+                		holdingD = false;
+                		player.setVelocity(0, player.getVelocity().getY());
+                	}
                 }
             }
         });
@@ -127,6 +138,7 @@ public class Play extends Screen implements ActionListener{
 						row++;
 						col = 0;
 					}
+					
 					if(levelData.substring(i-1, i+2).equals("\n</"))
 						phase = 0;
 					else{
@@ -137,17 +149,21 @@ public class Play extends Screen implements ActionListener{
 					if(levelData.charAt(i) == ' '){
 						i++;
 						col++;
-						if(col > 9){
-							col = 0;
-							row++;
-						}
+					}else if(levelData.charAt(i) == '\n'){
+						i++;
+						row++;
+						col = 0;
 					}
-					entitiesStart[row][col] = Integer.parseInt(levelData.substring(i, i+2))-1;
-					i += 2;
-					if(levelData.substring(i, i+3).equals("\n</"))
+					
+					if(levelData.substring(i-1, i+2).equals("\n</"))
 						phase = 0;
+					else{
+						entitiesStart[row][col] = Integer.parseInt(levelData.substring(i, i+2));
+						i++; //I only add one here because the loop will also add one right after this. Next iteration it will be at the space after each set of two numbers in the file. Allowing the program to increment row and col.
+					}
 				}
 			}
+			setLocations();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -155,12 +171,11 @@ public class Play extends Screen implements ActionListener{
 	
 	public void update(){
 		player.update();
+		requestFocusInWindow();
 		repaint();
 	}
 	
-	@Override
-	public void paintComponent(Graphics g){
-		Graphics2D g2 = (Graphics2D) g;
+	public void setLocations(){
 		for(int r=0; r<levelTiles.length; r++){
 			for(int c=0; c<levelTiles[0].length; c++){
 				gameTiles.add(TileFactory.getNewTile(levelTiles[r][c]));
@@ -168,9 +183,25 @@ public class Play extends Screen implements ActionListener{
 					gameTiles.remove(gameTiles.size()-1);
 				else{
 					gameTiles.get(gameTiles.size()-1).setLocation(new Point(c*TileFactory.TILE_SIZE,r*TileFactory.TILE_SIZE));
-					gameTiles.get(gameTiles.size()-1).draw(g2);
 				}
 			}
+		}
+		
+		for(int r=0; r<entitiesStart.length; r++){
+			for(int c=0; c<entitiesStart[0].length; c++){
+				if(entitiesStart[r][c] == 1){
+					player.setLocation(new Point(c*TileFactory.TILE_SIZE,((r+1)*TileFactory.TILE_SIZE)-Player.HEIGHT));
+					player.setLevel(gameTiles);
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void paintComponent(Graphics g){
+		Graphics2D g2 = (Graphics2D) g;
+		for(int r=0; r<gameTiles.size(); r++){
+				gameTiles.get(r).draw(g2);
 		}
 		player.draw(g2);
 		super.paintComponent(g);
