@@ -53,33 +53,12 @@ public class Play extends Screen implements ActionListener{
 		timer.start();
 		requestFocusInWindow();
 		addKeyListener(new KeyAdapter() {
-			boolean holdingA = false;
-			boolean holdingD = false;
-			
 			public void keyPressed(KeyEvent e){
-				if(e.getKeyCode() == KeyEvent.VK_A){
-                	holdingA = true;
-                	player.setVelocity(-3, player.getVelocity().getY());
-                }else if(e.getKeyCode() == KeyEvent.VK_D){
-                	holdingD = true;
-                	player.setVelocity(3, player.getVelocity().getY());
-                }
+                player.keyPressed(e);
 			}
 			
             public void keyReleased(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_W){
-                	player.jump();
-                }else if(e.getKeyCode() == KeyEvent.VK_A){
-                	if(holdingA){
-                		holdingA = false;
-                		player.setVelocity(0, player.getVelocity().getY());
-                	}
-                }else if(e.getKeyCode() == KeyEvent.VK_D){
-                	if(holdingD){
-                		holdingD = false;
-                		player.setVelocity(0, player.getVelocity().getY());
-                	}
-                }
+            	player.keyReleased(e);
             }
         });
 	}
@@ -190,8 +169,8 @@ public class Play extends Screen implements ActionListener{
 		for(int r=0; r<entitiesStart.length; r++){
 			for(int c=0; c<entitiesStart[0].length; c++){
 				if(entitiesStart[r][c] == 1){
-					player.setLocation(new Point(c*TileFactory.TILE_SIZE,((r+1)*TileFactory.TILE_SIZE)-Player.HEIGHT));
-					player.setLevel(gameTiles);
+					player.setLocation(new Point(c*TileFactory.TILE_SIZE,(int)(((r+1)*TileFactory.TILE_SIZE)-Player.getDimensions().getY())));
+					Player.setLevel(gameTiles);
 				}
 			}
 		}
