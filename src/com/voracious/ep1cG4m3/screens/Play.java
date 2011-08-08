@@ -1,5 +1,6 @@
 package com.voracious.ep1cG4m3.screens;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
@@ -14,12 +15,13 @@ import java.util.ArrayList;
 
 import javax.swing.Timer;
 
+import com.voracious.ep1cG4m3.entities.Enemy;
 import com.voracious.ep1cG4m3.entities.Player;
-import com.voracious.ep1cG4m3.framework.Entity;
 import com.voracious.ep1cG4m3.framework.Screen;
 import com.voracious.ep1cG4m3.framework.Tile;
 import com.voracious.ep1cG4m3.framework.TileFactory;
 import com.voracious.ep1cG4m3.utils.ScreenResultEvent;
+import com.voracious.ep1cG4m3.utils.Text;
 
 public class Play extends Screen implements ActionListener{
 
@@ -36,10 +38,11 @@ public class Play extends Screen implements ActionListener{
 	private int entitiesStart[][] = new int[16][20];
 	
 	private ArrayList<Tile> gameTiles = new ArrayList<Tile>();
-	private ArrayList<Entity> gameEnemies = new ArrayList<Entity>();
+	private ArrayList<Enemy> gameEnemies = new ArrayList<Enemy>();
 	
 	private Player player;
 	private Timer timer;
+	private Text versionNum;
 
 	public Play(int id, ScreenResultEvent game) {
 		super(id, game);
@@ -51,6 +54,7 @@ public class Play extends Screen implements ActionListener{
 		player = new Player();
 		loadLevel(currentLevel, currentWorld);
 		timer.start();
+		versionNum = new Text("Version 0.1a", new Point(35, 35), 12, 1, Color.BLACK);
 		requestFocusInWindow();
 		addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e){
@@ -179,10 +183,12 @@ public class Play extends Screen implements ActionListener{
 	@Override
 	public void paintComponent(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
+		
 		for(int r=0; r<gameTiles.size(); r++){
 				gameTiles.get(r).draw(g2);
 		}
 		player.draw(g2);
+		versionNum.draw(g2);
 		super.paintComponent(g);
 		Toolkit.getDefaultToolkit().sync();
 	    g.dispose();
