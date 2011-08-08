@@ -218,8 +218,6 @@ public class Entity extends Drawable {
 			}
 		}
 		
-		System.out.println("Falling: " + falling + "\nonGround: " + onGround + "\nVelocity: " + vel.toString());
-		
 		if(!onGround){
 			falling = true;
 			setAccelleration(acc.getX(), G);
