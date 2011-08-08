@@ -65,13 +65,8 @@ public class Tile extends Drawable implements Cloneable {
 	 * @see Entity
 	 */
 	
-	public boolean hitTest(Entity entity){
-		Rectangle mBounds = getBounds();
-		Rectangle eBounds = entity.getBounds();
-		return mBounds.intersects(eBounds) || ((mBounds.getX()+mBounds.getWidth()) >= eBounds.getX() && 
-				mBounds.getX() <= (eBounds.getX()+eBounds.getWidth()) &&
-				(mBounds.getY()+mBounds.getHeight()) >= eBounds.getY() &&
-				mBounds.getY() <= (eBounds.getY()+eBounds.getWidth()));
+	public boolean hitTest(Rectangle rect){
+		return getBounds().intersects(rect.getBounds());
 	}
 	
 	/**

@@ -19,10 +19,13 @@ package com.voracious.ep1cG4m3.framework;
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 import com.voracious.ep1cG4m3.utils.Animation;
@@ -40,9 +43,16 @@ public class Entity extends Drawable {
 	private String currentAnimation;
 	private Point dPoint;
 	private Point aPoint;
+	private static Point dimensions;
+	private boolean falling;
 	
-	public static final int WIDTH = 25;
-	public static final int HEIGHT = 50;
+	private boolean WkeyDown = false;
+	private boolean AkeyDown = false;
+	private boolean DkeyDown = false;
+	
+	public static ArrayList<Tile> tiles;
+	public static final int G = 2;
+	public static final int TERM_VEL = 10;
 	public static BufferedImage sourceImage;
 	
 	/**
@@ -51,11 +61,13 @@ public class Entity extends Drawable {
 	 * @see Drawable
 	 */
 	
-	public Entity(){
-		super(calculateFrames(), true);
+	public Entity(int width, int height){
+		super(calculateFrames(width, height), true);
 		myAnimations = new HashMap<String, Animation>();
 		dPoint = new Point(0, 0);
 		aPoint = new Point(0, 0);
+		dimensions = new Point(width, height);
+		falling = false;
 		currentAnimation = "";
 	}
 	
@@ -132,6 +144,13 @@ public class Entity extends Drawable {
 		pos.setLocation(pos.getX()+dPoint.getX(), pos.getY()+dPoint.getY());
 	}
 	
+	public void jump(){
+		if(!falling){
+			setVelocity(getVelocity().getX(), getVelocity().getY()-23);
+			falling = true;
+		}
+	}
+	
 	/**
 	 * Causes the Entity to accelerate, move, and to display the next animation frame.
 	 * 
@@ -140,9 +159,88 @@ public class Entity extends Drawable {
 	
 	public void update(){
 		accelerate();
+		
+		Point dim = getDimensions();
+		Point loc = getLocation();
+		Point vel = getVelocity();
+		Point acc = getAccelleration();
+		
+		if(WkeyDown)
+			jump();
+		if(AkeyDown)
+			setVelocity(-4, vel.getY());
+		if(DkeyDown)
+			setVelocity(4, vel.getY());
+		
+		if(!DkeyDown && !AkeyDown)
+			setVelocity(0, vel.getY());
+		
+		vel = getVelocity();
+		
+		
+		
+		Rectangle nextFrame = getBounds();
+		
+		boolean onGround = false;
+		
+		for(int i=0; i<tiles.size(); i++){
+			nextFrame.setLocation((int)(loc.getX() + vel.getX()), (int)(loc.getY()));
+			if(tiles.get(i).hitTest(nextFrame)){
+				if(vel.getX() > 0)
+					setLocation(new Point((int)(tiles.get(i).getLocation().getX()-dim.getX()), (int)(loc.getY())));
+				else if(vel.getX() < 0)
+					setLocation(new Point((int)(tiles.get(i).getLocation().getX()+TileFactory.TILE_SIZE), (int)(loc.getY())));
+				setVelocity(0, vel.getY());
+				vel = getVelocity();
+				loc = getLocation();
+			}
+			
+			nextFrame.setLocation((int)(loc.getX()), (int)(loc.getY()+vel.getY()));
+			if(falling){
+				if(tiles.get(i).hitTest(nextFrame)){
+					if(vel.getY() > 0){
+						setAccelleration(acc.getX(), 0);
+						setVelocity(vel.getX(), 0);
+						setLocation(new Point((int)(loc.getX()), (int)(tiles.get(i).getLocation().getY()-dim.getY())));
+						falling = false;
+					}else if(vel.getY() < 0){
+						setVelocity(vel.getX(), 0);
+						setLocation(new Point((int)(loc.getX()), (int)(tiles.get(i).getLocation().getY()+TileFactory.TILE_SIZE)));
+					}
+					loc = getLocation();
+					vel = getVelocity();
+					acc = getAccelleration();
+				}
+			}
+			nextFrame.setLocation((int)(loc.getX()+vel.getX()), (int)(loc.getY()+vel.getY()+1));
+			if(tiles.get(i).hitTest(nextFrame)){
+				onGround = true;
+			}
+		}
+		
+		System.out.println("Falling: " + falling + "\nonGround: " + onGround + "\nVelocity: " + vel.toString());
+		
+		if(!onGround){
+			falling = true;
+			setAccelleration(acc.getX(), G);
+			acc = getAccelleration();
+		}
+		
+		if(falling && vel.getY() > TERM_VEL){
+			setVelocity(vel.getX(), TERM_VEL);
+			setAccelleration(acc.getX(), 0);
+			vel = getVelocity();
+			acc = getAccelleration();
+		}
+		
 		move();
+		
 		if(currentAnimation != "")
 			this.setImage(myAnimations.get(currentAnimation).getNextFrame());
+	}
+	
+	public static void setLevel(ArrayList<Tile> levelTiles){
+		tiles = levelTiles;
 	}
 	
 	/**
@@ -167,13 +265,17 @@ public class Entity extends Drawable {
 		dPoint.setLocation(dx, dy);
 	}
 	
+	public static void setDimensions(Point dim){
+		dimensions = dim;
+	}
+	
 	public static void setAnimationSource(BufferedImage source){
 		sourceImage = source;
 	}
 	
-	public static BufferedImage calculateFrames(){
+	public static BufferedImage calculateFrames(int width, int height){
 		if(sourceImage != null)
-			return (sourceImage.getSubimage((0%(sourceImage.getWidth()/(WIDTH)))*(WIDTH), (0/(sourceImage.getWidth()/(WIDTH)))*(WIDTH), (WIDTH), (HEIGHT)));
+			return (sourceImage.getSubimage((0%(sourceImage.getWidth()/(width)))*(width), (0/(sourceImage.getWidth()/(width)))*(width), width, height));
 		else{
 			System.out.println("null");
 			return null;
@@ -184,7 +286,31 @@ public class Entity extends Drawable {
 		return aPoint;
 	}
 	
+	public void keyPressed(KeyEvent e){
+		if(e.getKeyCode() == KeyEvent.VK_W){
+			WkeyDown = true;
+		}else if(e.getKeyCode() == KeyEvent.VK_A){
+			AkeyDown = true;
+		}else if(e.getKeyCode() == KeyEvent.VK_D){
+			DkeyDown = true;
+		}
+	}
+	
+	public void keyReleased(KeyEvent e){
+		if(e.getKeyCode() == KeyEvent.VK_W){
+			WkeyDown = false;
+		}else if(e.getKeyCode() == KeyEvent.VK_A){
+			AkeyDown = false;
+		}else if(e.getKeyCode() == KeyEvent.VK_D){
+			DkeyDown = false;
+		}
+	}
+	
 	public Point getVelocity(){
 		return dPoint;
+	}
+	
+	public static Point getDimensions(){
+		return dimensions;
 	}
 }
