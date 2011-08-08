@@ -19,13 +19,18 @@ package com.voracious.ep1cG4m3.entities;
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
+import java.awt.Point;
+import java.util.ArrayList;
+
 import com.voracious.ep1cG4m3.framework.Entity;
-import com.voracious.ep1cG4m3.utils.Point;
+import com.voracious.ep1cG4m3.framework.Tile;
 
 public class Player extends Entity {
 	public static final int WIDTH = 25;
 	public static final int HEIGHT = 50;
 	
+	
+	public ArrayList<Tile> tiles;
 	public boolean falling = false;
 	
 	public Player(){
@@ -36,8 +41,8 @@ public class Player extends Entity {
 		falling = true;
 		Point vel = getVelocity();
 		Point acc = getAccelleration();
-		setVelocity(vel.getX(), vel.getY()-10);
-		setAccelleration(acc.getX(), acc.getY()-2);
+		setVelocity(vel.getX(), vel.getY()-20);
+		setAccelleration(acc.getX(), acc.getY()+2);
 	}
 	
 	@Override
@@ -45,9 +50,22 @@ public class Player extends Entity {
 		Point vel = getVelocity();
 		Point acc = getAccelleration();
 		if(falling){
-			if(vel.getY() > 15)
-				setAccelleration(acc.getX(), acc.getY()+2);
+			if(vel.getY() > 10)
+				setAccelleration(acc.getX(), 0);
+			for(int i=0; i<tiles.size(); i++){
+				Tile temp = tiles.get(i);
+				if(temp.hitTest(this)){
+					falling = false;
+					this.setVelocity(vel.getX(), 0);
+					this.setAccelleration(acc.getX(), 0);
+					this.setLocation(new Point((int)(this.getLocation().getX()), (int)(temp.getLocation().getY()-Player.HEIGHT)));
+				}
+			}
 		}
 		super.update();
+	}
+
+	public void setLevel(ArrayList<Tile> levelTiles){
+		tiles = levelTiles;
 	}
 }

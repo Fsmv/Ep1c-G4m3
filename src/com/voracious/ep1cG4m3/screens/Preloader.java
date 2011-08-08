@@ -5,11 +5,11 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 import com.voracious.ep1cG4m3.framework.Drawable;
 import com.voracious.ep1cG4m3.framework.Screen;
-import com.voracious.ep1cG4m3.utils.Point;
 import com.voracious.ep1cG4m3.utils.ScreenResultEvent;
 
 public class Preloader extends Screen {

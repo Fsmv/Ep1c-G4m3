@@ -23,8 +23,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-
-import com.voracious.ep1cG4m3.utils.Point;
+import java.awt.Point;
 
 /**
  * Super class all classes that will be drawn must extend.
