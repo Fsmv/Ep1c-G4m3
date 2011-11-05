@@ -1,5 +1,3 @@
-package com.voracious.ep1cG4m3.entities;
-
 /*  
  *  Ep1c G4m3 -- A parody platformer
  * 
@@ -19,11 +17,15 @@ package com.voracious.ep1cG4m3.entities;
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
+package com.voracious.ep1cG4m3.entities;
+
 import com.voracious.ep1cG4m3.framework.Entity;
+import com.voracious.ep1cG4m3.utils.Art;
 
 public class Player extends Entity {
 	
 	public Player(){
-		super(25, 50);
+		super();
+		Player.setAnimationSource(Art.playerFrames);
 	}
 }

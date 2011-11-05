@@ -55,7 +55,7 @@ public class Text extends Drawable {
 	"0123456789+-=*:;";//
 	
 	/**
-	 * Make an empty object
+	 * Make an empty text object
 	 */
 	
 	public Text(){

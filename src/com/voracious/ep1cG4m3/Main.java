@@ -33,6 +33,12 @@ import com.voracious.ep1cG4m3.screens.Menu;
 import com.voracious.ep1cG4m3.screens.Preloader;
 import com.voracious.ep1cG4m3.utils.ScreenResultListener;
 
+/**
+ * This is the naub class that coordinates all of the screens and owns the window.
+ * 
+ * @author Voracious Softworks
+ */
+
 public class Main extends JPanel implements ScreenResultListener, ActionListener{
 	private static final long serialVersionUID = 9198379891709086094L;
 
@@ -68,6 +74,12 @@ public class Main extends JPanel implements ScreenResultListener, ActionListener
 		setTimer(new Timer(1000/36, this));
 		timer.start();
 	}
+	
+	/**
+	 * Display a different screen
+	 * 
+	 * @param id the id of the screen to switch to
+	 */
 	
 	public void switchScreen(int id){
 		CardLayout cl = (CardLayout)panel.getLayout();
@@ -112,6 +124,7 @@ public class Main extends JPanel implements ScreenResultListener, ActionListener
 	/**
 	 * @param timer the timer to set
 	 */
+	
 	public void setTimer(Timer timer) {
 		this.timer = timer;
 	}
@@ -119,6 +132,7 @@ public class Main extends JPanel implements ScreenResultListener, ActionListener
 	/**
 	 * @return the timer
 	 */
+	
 	public Timer getTimer() {
 		return timer;
 	}

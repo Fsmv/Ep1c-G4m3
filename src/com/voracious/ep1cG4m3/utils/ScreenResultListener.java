@@ -26,8 +26,9 @@ package com.voracious.ep1cG4m3.utils;
  */
 
 public interface ScreenResultListener {
+	
 	/**
-	 * Method to allow a screen to pass data to a class that implements this
+	 * Allows screens to pass data to classes that implement this
 	 * 
 	 * @param id screen id
 	 * @param resultCode screen result code

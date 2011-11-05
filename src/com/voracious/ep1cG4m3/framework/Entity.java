@@ -28,7 +28,7 @@ import java.awt.image.BufferedImage;
 import com.voracious.ep1cG4m3.utils.Animation;
 
 /**
- * Framework class that creates the general model for the enemies and characters.
+ * Like Drawable except this class has methods to facilitate animation and motion.
  * 
  * @author Voracious Softworks
  * @version 6/20/2011
@@ -52,19 +52,22 @@ public class Entity extends Drawable {
 	
 	public Entity(){
 		super();
-		myAnimations = null;
-		velocity = new Point.Double(0, 0);
-		acceleration = new Point.Double(0, 0);
-		currentAnimation = null;
-	}
-	
-	public Entity(int width, int height){
-		super();
-		this.setImage(calculateFrames(width, height));
 		myAnimations = new HashMap<String, Animation>();
 		velocity = new Point.Double(0, 0);
 		acceleration = new Point.Double(0, 0);
 		currentAnimation = "";
+	}
+	
+	/**
+	 * Initializes Entity with a width and height used to run calculateFrames
+	 * 
+	 * @param width image width
+	 * @param height image height
+	 */
+	
+	public Entity(int width, int height){
+		super();
+		this.setImage(calculateFrames(width, height));
 	}
 	
 	/**
@@ -133,12 +136,25 @@ public class Entity extends Drawable {
 		}
 	}
 	
+	/**
+	 * @param image the image to set
+	 */
+	
 	public static void setAnimationSource(Image image){
 		sourceImage = (BufferedImage) image;
 	}
 	
+	/**
+	 * Cuts the animation frames out of the source image.
+	 * 
+	 * @param width image width
+	 * @param height image height
+	 * @return The first frame
+	 */
+	
 	public static BufferedImage calculateFrames(int width, int height){
 		if(sourceImage != null)
+			//TODO: Put a for loop here so this calculates all the frames and returns an array
 			return (sourceImage.getSubimage((0%(sourceImage.getWidth()/(width)))*(width), (0/(sourceImage.getWidth()/(width)))*(width), width, height));
 		else{
 			System.out.println("null");
@@ -146,23 +162,46 @@ public class Entity extends Drawable {
 		}
 	}
 	
-	public void rotate(double rads, int x, int y){
-		//TODO: Write method
-	}
+	/**
+	 * @param velocity velocity to set
+	 */
 	
 	public void setVelocity(Point.Double velocity){
 		this.velocity = velocity;
 	}
 	
+	/** 
+	 * @return velocity
+	 */
+	
 	public Point.Double getVelocity(){
 		return velocity;
 	}
+	
+	/**
+	 * @param acceleration acceleration to set
+	 */
 	
 	public void setAcceleration(Point.Double acceleration){
 		this.acceleration = acceleration;
 	}
 	
+	/**
+	 * @return acceleration
+	 */
+	
 	public Point.Double getAcceleration(){
 		return acceleration;
+	}
+	
+	/**
+	 * Rotates the image by [rads] radians
+	 * 
+	 * @param rads radians to rotate to
+	 * @param p point to rotate around
+	 */
+	
+	public void rotate(double rads, Point p){
+		//TODO: Write method
 	}
 }

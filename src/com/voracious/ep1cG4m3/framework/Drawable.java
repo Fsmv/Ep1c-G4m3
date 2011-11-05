@@ -28,6 +28,11 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 
+/**
+ * Should be extended by any class that will be drawn or has an image
+ * 
+ * @author Voracious Softworks
+ */
 
 public class Drawable extends ImageIcon {
 	private static final long serialVersionUID = 5748722120305601075L;
@@ -55,10 +60,21 @@ public class Drawable extends ImageIcon {
 		return location;
 	}
 	
+	/**
+	 * Paints the icon using the stored location
+	 * 
+	 * @param c component to draw on
+	 * @param g graphics to draw on
+	 */
+	
 	public void paintIcon(Component c, Graphics g){
 		Point loc = getLocation();
 		super.paintIcon(c, g, (int)loc.getX(), (int)loc.getY());
 	}
+	
+	/**
+	 * @return rectangle representing the object
+	 */
 	
 	public Rectangle getBounds(){
 		Point loc = getLocation();

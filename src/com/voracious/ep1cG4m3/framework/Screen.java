@@ -27,12 +27,25 @@ import java.awt.image.BufferStrategy;
 
 import com.voracious.ep1cG4m3.utils.ScreenResultListener;
 
+/**
+ * Framework class; should be extended to create a new screen.
+ * 
+ * @author Voracious Softworks
+ */
+
 public abstract class Screen extends Canvas {
 	private static final long serialVersionUID = 2222464333625474339L;
 	
 	private BufferStrategy buffer;
 	private ScreenResultListener listener;
 	private int id;
+	
+	/**
+	 * Creates a new Screen object
+	 * 
+	 * @param listener listener this screen will post messages to
+	 * @param id the screens id (for switching purposes)
+	 */
 	
 	public Screen(ScreenResultListener listener, int id){
 		setListener(listener);
@@ -49,7 +62,7 @@ public abstract class Screen extends Canvas {
 	
 	/**
 	 * Called when the screen is being switched to. Each screen can initialize GUI elements and listeners here.
-	 * Call super() when overriding.
+	 * <br />Call super() when overriding.
 	 */
 	
 	public void start(){
@@ -58,8 +71,8 @@ public abstract class Screen extends Canvas {
 	}
 	
 	/**
-	 * Called when switching to another screen. Each screen MUST remove it's specific listeners here.
-	 * Call super() when overriding.
+	 * Called when switching to another screen. Each screen MUST remove its listeners here.
+	 * <br />Call super() when overriding.
 	 */
 	
 	public void stop(){
@@ -68,7 +81,7 @@ public abstract class Screen extends Canvas {
 	}
 	
 	/**
-	 * Implement this method to draw graphics to be displayed.
+	 * Implement this method to draw graphics.
 	 * 
 	 * @param g Graphics object that will be displayed
 	 */
@@ -79,7 +92,9 @@ public abstract class Screen extends Canvas {
 	 * Called immediately after rendering completes. Should be used to change the graphics that will be drawn next frame.
 	 */
 	
-	public abstract void update();
+	public void update(){
+		//Nothing
+	}
 	
 	/**
 	 * This message should not be overridden.
@@ -120,22 +135,31 @@ public abstract class Screen extends Canvas {
 	}
 
 	/**
-	 * @param listener the listener to set
+	 * Set the listener object
+	 * 
+	 * @param listener the listener change to
 	 */
+	
 	public void setListener(ScreenResultListener listener) {
 		this.listener = listener;
 	}
 
 	/**
+	 * Set the screen id
+	 * 
 	 * @param id the id to set
 	 */
+	
 	public void setId(int id) {
 		this.id = id;
 	}
 
 	/**
+	 * Get the screen id
+	 * 
 	 * @return the id
 	 */
+	
 	public int getId() {
 		return id;
 	}
