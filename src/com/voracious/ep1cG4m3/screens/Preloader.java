@@ -1,65 +1,57 @@
+/*  
+ *  Ep1c G4m3 -- A parody platformer
+ * 
+ *  Copyright (C) 2011  Voracious Softworks
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ */
+
 package com.voracious.ep1cG4m3.screens;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Toolkit;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-import com.voracious.ep1cG4m3.framework.Drawable;
 import com.voracious.ep1cG4m3.framework.Screen;
-import com.voracious.ep1cG4m3.utils.ScreenResultEvent;
+import com.voracious.ep1cG4m3.utils.Art;
+import com.voracious.ep1cG4m3.utils.ScreenResultListener;
 
 public class Preloader extends Screen {
-	private static final long serialVersionUID = 1333992802820959184L;
-	private MediaTracker tracker;
-	private Drawable bg;
 
-	public Preloader(int id, ScreenResultEvent listener) {
-		super(id, listener);
-		tracker = new MediaTracker(this);
-		bg = new Drawable();
-		String file[] = {"/loadImage.png"};
-		BufferedImage temp = loadImages(file)[0];
-		bg.setImage(temp);
-		bg.setVisible(true);
-		bg.setLocation(new Point(0, 0));
-	}
+	public static int RESULT_OK = 0;
 	
-	public BufferedImage[] loadImages(String[] filePaths){
-		BufferedImage result[] = new BufferedImage[filePaths.length];
-		
-		for(int i=0; i<filePaths.length; i++){
-			Image temp = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource(filePaths[i]));
-			tracker.addImage(temp, i);
-	        try {
-	            tracker.waitForID(i);
-	            result[i] = new BufferedImage(temp.getWidth(null), temp.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-	            result[i].getGraphics().drawImage(temp, 0, 0, null);
-	        } catch (InterruptedException e) { e.printStackTrace(); }
-		}
-		
-		return result;
-	}
-
-	@Override
-	public void start() {
-	}
-
-	@Override
-	public void stop() {
-		
+	private static final long serialVersionUID = -2293651813069405885L;
+	private BufferedImage bg;
+	
+	public Preloader(ScreenResultListener listener, int id) {
+		super(listener, id);
 	}
 	
 	@Override
-	public void paintComponent(Graphics g){
-		Graphics2D g2 = (Graphics2D)g;
-		bg.draw(g2);
+	public void draw(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		bg = Art.loadImage("/loadImage.png");
 		
-		super.paintComponent(g);
-		Toolkit.getDefaultToolkit().sync();
-		g.dispose();
+		g2.drawImage(bg, null, 0, 0);
+	}
+	
+	private int ticks = 0;
+	
+	@Override
+	public void update(){
+		/*ticks++;
+		if(ticks == 72)*/
+			dispatchResult(Preloader.RESULT_OK);
 	}
 }

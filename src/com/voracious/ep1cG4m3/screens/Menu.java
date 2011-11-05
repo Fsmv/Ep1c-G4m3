@@ -1,5 +1,3 @@
-package com.voracious.ep1cG4m3.screens;
-
 /*  
  *  Ep1c G4m3 -- A parody platformer
  * 
@@ -19,20 +17,21 @@ package com.voracious.ep1cG4m3.screens;
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
+package com.voracious.ep1cG4m3.screens;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Toolkit;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import com.voracious.ep1cG4m3.framework.Screen;
 import com.voracious.ep1cG4m3.framework.Drawable;
+import com.voracious.ep1cG4m3.framework.Screen;
+import com.voracious.ep1cG4m3.utils.ScreenResultListener;
 import com.voracious.ep1cG4m3.utils.Text;
-import com.voracious.ep1cG4m3.utils.ScreenResultEvent;
 
 /**
  * First thing the user sees. This class offers navigation to other screens. Such as play, instructions, and level creator.
@@ -62,8 +61,8 @@ public class Menu extends Screen{
 	 * @see Screen
 	 */
 
-	public Menu(int id, ScreenResultEvent listener) {
-		super(id, listener);
+	public Menu(ScreenResultListener listener, int id) {
+		super(listener, id);
 		mouseListener = new Mouse();
 		gui = new ArrayList<Drawable>();
 	}
@@ -87,8 +86,8 @@ public class Menu extends Screen{
 		g2.fillRect(0, 0, 400, 75);
 		g2.setColor(Color.BLACK);
 		g2.drawRect(0, 0, 399, 74);
-		gui.add(new Drawable(temp, true, new Point(50, 50)));
-		gui.add(new Text("Start", new Point(60, 80), 15, 1, Color.BLACK));
+		gui.add(new Drawable(temp, new Point(50, 50)));
+		gui.add(new Text("Start", new Point(60, 80), 15, 0, Color.BLACK));
 		
 		temp = new BufferedImage(400, 75, BufferedImage.TYPE_INT_RGB);
 		g2 = temp.createGraphics();
@@ -96,8 +95,8 @@ public class Menu extends Screen{
 		g2.fillRect(0, 0, 400, 75);
 		g2.setColor(Color.BLACK);
 		g2.drawRect(0, 0, 399, 74);
-		gui.add(new Drawable(temp, true, new Point(50, 145)));
-		gui.add(new Text("Instructions", new Point(60, 175), 15, 1, Color.BLACK));
+		gui.add(new Drawable(temp, new Point(50, 145)));
+		gui.add(new Text("Instructions", new Point(60, 175), 15, 0, Color.BLACK));
 		
 		temp = new BufferedImage(400, 75, BufferedImage.TYPE_INT_RGB);
 		g2 = temp.createGraphics();
@@ -105,10 +104,10 @@ public class Menu extends Screen{
 		g2.fillRect(0, 0, 400, 75);
 		g2.setColor(Color.BLACK);
 		g2.drawRect(0, 0, 399, 74);
-		gui.add(new Drawable(temp, true, new Point(50, 240)));
-		gui.add(new Text("Level Editor", new Point(60, 270), 15, 1, Color.BLACK));
+		gui.add(new Drawable(temp, new Point(50, 240)));
+		gui.add(new Text("Level Editor", new Point(60, 270), 15, 0, Color.BLACK));
 		
-		gui.add(new Text("Menu", new Point(5, 10), 25, 1, Color.BLACK));
+		gui.add(new Text("Menu", new Point(5, 10), 25, 0, Color.BLACK));
 	}
 	
 	/**
@@ -127,15 +126,10 @@ public class Menu extends Screen{
 	 */
 	
 	@Override
-	public void paintComponent(Graphics g) {
-		Graphics2D g2 = (Graphics2D) g;
-	    
-	    for(int i=0; i<gui.size(); i++){
-	    	gui.get(i).draw(g2);
+	public void draw(Graphics g) {
+	    for(Drawable o : gui){
+	    	o.paintIcon(this, g);
 	    }
-	    super.paintComponent(g);
-	    Toolkit.getDefaultToolkit().sync();
-	    g.dispose();
 	}
 	
 	class Mouse extends MouseAdapter{
@@ -146,12 +140,22 @@ public class Menu extends Screen{
 			
 			for(int i=0; i<gui.size(); i++){
 				Point loc = gui.get(i).getLocation();
-				BufferedImage img = gui.get(i).getImage();
+				BufferedImage img = (BufferedImage) gui.get(i).getImage();
 				
 				if(x > loc.getX() && y > loc.getY() && x < loc.getX()+img.getWidth() && y < loc.getY() + img.getHeight()){
-					dispatchResult(i);
+					if(i == RESULT_PLAY || i == RESULT_INSTRUCTIONS || i == RESULT_LEVEL_EDITOR)
+						dispatchResult(i);
 				}
 			}
 		}
+	}
+	
+	/**
+	 * @see Screen
+	 */
+	
+	@Override
+	public void update() {
+		//Nothing for now, maybe an animated background later.
 	}
 }
