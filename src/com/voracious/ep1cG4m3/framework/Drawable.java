@@ -1,5 +1,3 @@
-package com.voracious.ep1cG4m3.framework;
-
 /*  
  *  Ep1c G4m3 -- A parody platformer
  * 
@@ -19,141 +17,52 @@ package com.voracious.ep1cG4m3.framework;
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-import java.awt.Graphics2D;
+package com.voracious.ep1cG4m3.framework;
+
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.awt.Point;
 
-/**
- * Super class all classes that will be drawn must extend.
- * 
- * @author Voracious Softworks
- * @version 6/20/2011
- */
+import javax.swing.ImageIcon;
 
-public class Drawable {
-	private BufferedImage myImage;
-	private boolean isVisible;
-	private Point myLocation;
+
+public class Drawable extends ImageIcon {
+	private static final long serialVersionUID = 5748722120305601075L;
 	
-	/**
-	 * Default Constructor, allows creating it then setting the values later.
-	 */
+	private Point location = new Point(0, 0);
 	
-	public Drawable(){
-		myImage = (BufferedImage) null;
-		isVisible = false;
-		myLocation = new Point();
+	public Drawable() {
+		super();
 	}
 	
-	/**
-	 * Constructor to initialize the image. It defaults to invisible and the location defaults to (-1, -1).
-	 * 
-	 * @param image Display image for the class
-	 */
-	
-	public Drawable(BufferedImage image){
-		myImage = image;
-		isVisible = false;
-		myLocation = new Point();
+	public Drawable(Image i){
+		super(i);
 	}
-	
-	/**
-	 * Allows initialization of both image and visibility. Location defaults to (-1, -1).
-	 * 
-	 * @param image Display image for the class
-	 * @param visible Whether the image should be visible or not 
-	 */
-	
-	public Drawable(BufferedImage image, boolean visible){
-		myImage = image;
-		isVisible = visible;
-		myLocation = new Point();
+
+	public Drawable(Image i, Point location) {
+		super(i);
+		setLocation(location);
 	}
-	
-	/**
-	 * Allows initialization of image, visibility and location.
-	 * 
-	 * @param image Display image for the class
-	 * @param visible Whether the image should be visible or not
-	 * @param point location
-	 * @see Point
-	 */
-	
-	public Drawable(BufferedImage image, boolean visible, Point point){
-		myImage = image;
-		isVisible = visible;
-		myLocation = point;
-	}
-	
-	/**
-	 * If the image is set to be visible draw it to the screen
-	 * 
-	 * @param page Object to be drawn to
-	 */
-	
-	public void draw(Graphics2D page){
-		if(isVisible)
-			page.drawImage(myImage, (int)myLocation.getX(), (int)myLocation.getY(), (ImageObserver)null);
-	}
-	
-	/**
-	 * Set the image after initialization
-	 * 
-	 * @param image Display image for the class
-	 */
-	
-	public void setImage(BufferedImage image){
-		myImage = image;
-	}
-	
-	/**
-	 * Set the image visibility after initialization
-	 * 
-	 * @param visible Whether the image should be visible or not
-	 */
-	
-	public void setVisible(boolean visible){
-		isVisible = visible;
-	}
-	
+
 	public void setLocation(Point location){
-		myLocation = location;
+		this.location = location;
 	}
-	
-	/**
-	 * Supplies the image that it is set to display
-	 * 
-	 * @return Current image.
-	 */
-	
-	public BufferedImage getImage(){
-		return myImage;
-	}
-	
-	/**
-	 * Supplies the location the image will be displayed at.
-	 * 
-	 * @return Current location.
-	 * @see Point
-	 */
 	
 	public Point getLocation(){
-		return myLocation;
+		return location;
+	}
+	
+	public void paintIcon(Component c, Graphics g){
+		Point loc = getLocation();
+		super.paintIcon(c, g, (int)loc.getX(), (int)loc.getY());
 	}
 	
 	public Rectangle getBounds(){
-		return new Rectangle((int)getLocation().getX(), (int)getLocation().getY(), getImage().getWidth(), getImage().getHeight());
-	}
-	
-	/**
-	 * Supplies the visibility status.
-	 * 
-	 * @return visibility
-	 */
-	
-	public boolean isVisible(){
-		return isVisible;
+		Point loc = getLocation();
+		BufferedImage img = (BufferedImage) getImage();
+		return new Rectangle((int)loc.getX(), (int)loc.getY(), img.getWidth(), img.getHeight());
 	}
 }

@@ -1,5 +1,3 @@
-package com.voracious.ep1cG4m3.framework;
-
 /*  
  *  Ep1c G4m3 -- A parody platformer
  * 
@@ -19,13 +17,12 @@ package com.voracious.ep1cG4m3.framework;
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-import java.util.ArrayList;
+package com.voracious.ep1cG4m3.framework;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 import com.voracious.ep1cG4m3.utils.Animation;
@@ -39,21 +36,13 @@ import com.voracious.ep1cG4m3.utils.Animation;
  */
 
 public class Entity extends Drawable {
+	private static final long serialVersionUID = -1211928635812350349L;
 	private Map<String, Animation> myAnimations;
 	private String currentAnimation;
-	private Point dPoint;
-	private Point aPoint;
-	private static Point dimensions;
-	private boolean falling;
-	
-	private boolean WkeyDown = false;
-	private boolean AkeyDown = false;
-	private boolean DkeyDown = false;
-	
-	public static ArrayList<Tile> tiles;
-	public static final int G = 2;
-	public static final int TERM_VEL = 10;
-	public static BufferedImage sourceImage;
+	private Point.Double velocity;
+	private Point.Double acceleration;
+
+	private static BufferedImage sourceImage;
 	
 	/**
 	 * Initializes animations list, acceleration and speed. Runs the default constructor of Drawable.
@@ -61,26 +50,21 @@ public class Entity extends Drawable {
 	 * @see Drawable
 	 */
 	
-	public Entity(int width, int height){
-		super(calculateFrames(width, height), true);
-		myAnimations = new HashMap<String, Animation>();
-		dPoint = new Point(0, 0);
-		aPoint = new Point(0, 0);
-		dimensions = new Point(width, height);
-		falling = false;
-		currentAnimation = "";
+	public Entity(){
+		super();
+		myAnimations = null;
+		velocity = new Point.Double(0, 0);
+		acceleration = new Point.Double(0, 0);
+		currentAnimation = null;
 	}
 	
-	/**
-	 * Runs update() before drawing.
-	 * 
-	 * @see Drawable
-	 */
-	
-	@Override
-	public void draw(Graphics2D p){
-		update();
-		super.draw(p);
+	public Entity(int width, int height){
+		super();
+		this.setImage(calculateFrames(width, height));
+		myAnimations = new HashMap<String, Animation>();
+		velocity = new Point.Double(0, 0);
+		acceleration = new Point.Double(0, 0);
+		currentAnimation = "";
 	}
 	
 	/**
@@ -128,147 +112,29 @@ public class Entity extends Drawable {
 	}
 	
 	/**
-	 * Changes the speed of the Entity based on the acceleration.
-	 */
-	
-	private void accelerate(){
-		dPoint.setLocation(dPoint.getX()+aPoint.getX(), dPoint.getY()+aPoint.getY());	
-	}
-	
-	/**
-	 * Changes the location of the entity based on the speed.
-	 */
-	
-	private void move(){
-		Point pos = this.getLocation();
-		pos.setLocation(pos.getX()+dPoint.getX(), pos.getY()+dPoint.getY());
-	}
-	
-	public void jump(){
-		if(!falling){
-			setVelocity(getVelocity().getX(), getVelocity().getY()-23);
-			falling = true;
-		}
-	}
-	
-	/**
 	 * Causes the Entity to accelerate, move, and to display the next animation frame.
 	 * 
 	 * @see Animation
 	 */
 	
 	public void update(){
-		accelerate();
-		
-		Point dim = getDimensions();
 		Point loc = getLocation();
-		Point vel = getVelocity();
-		Point acc = getAccelleration();
+		Point.Double vel = getVelocity();
+		Point.Double acc = getAcceleration();
 		
-		if(WkeyDown)
-			jump();
-		if(AkeyDown)
-			setVelocity(-4, vel.getY());
-		if(DkeyDown)
-			setVelocity(4, vel.getY());
+		vel.setLocation(vel.getX()+acc.getX(), vel.getY()+acc.getY());
+		loc.setLocation(loc.getX()+vel.getX(), loc.getY()+vel.getY());
 		
-		if(!DkeyDown && !AkeyDown)
-			setVelocity(0, vel.getY());
+		this.setLocation(loc);
+		this.setVelocity(vel);
 		
-		vel = getVelocity();
-		
-		
-		
-		Rectangle nextFrame = getBounds();
-		
-		boolean onGround = false;
-		
-		for(int i=0; i<tiles.size(); i++){
-			nextFrame.setLocation((int)(loc.getX() + vel.getX()), (int)(loc.getY()));
-			if(tiles.get(i).hitTest(nextFrame)){
-				if(vel.getX() > 0)
-					setLocation(new Point((int)(tiles.get(i).getLocation().getX()-dim.getX()), (int)(loc.getY())));
-				else if(vel.getX() < 0)
-					setLocation(new Point((int)(tiles.get(i).getLocation().getX()+TileFactory.TILE_SIZE), (int)(loc.getY())));
-				setVelocity(0, vel.getY());
-				vel = getVelocity();
-				loc = getLocation();
-			}
-			
-			nextFrame.setLocation((int)(loc.getX()), (int)(loc.getY()+vel.getY()));
-			if(falling){
-				if(tiles.get(i).hitTest(nextFrame)){
-					if(vel.getY() > 0){
-						setAccelleration(acc.getX(), 0);
-						setVelocity(vel.getX(), 0);
-						setLocation(new Point((int)(loc.getX()), (int)(tiles.get(i).getLocation().getY()-dim.getY())));
-						falling = false;
-					}else if(vel.getY() < 0){
-						setVelocity(vel.getX(), 0);
-						setLocation(new Point((int)(loc.getX()), (int)(tiles.get(i).getLocation().getY()+TileFactory.TILE_SIZE)));
-					}
-					loc = getLocation();
-					vel = getVelocity();
-					acc = getAccelleration();
-				}
-			}
-			nextFrame.setLocation((int)(loc.getX()+vel.getX()), (int)(loc.getY()+vel.getY()+1));
-			if(tiles.get(i).hitTest(nextFrame)){
-				onGround = true;
-			}
+		if(getCurrentAnimation() != null && getCurrentAnimation() != ""){
+			this.setImage(getAnimations().get(getCurrentAnimation()).getNextFrame());
 		}
-		
-		if(!onGround){
-			falling = true;
-			setAccelleration(acc.getX(), G);
-			acc = getAccelleration();
-		}
-		
-		if(falling && vel.getY() > TERM_VEL){
-			setVelocity(vel.getX(), TERM_VEL);
-			setAccelleration(acc.getX(), 0);
-			vel = getVelocity();
-			acc = getAccelleration();
-		}
-		
-		move();
-		
-		if(currentAnimation != "")
-			this.setImage(myAnimations.get(currentAnimation).getNextFrame());
 	}
 	
-	public static void setLevel(ArrayList<Tile> levelTiles){
-		tiles = levelTiles;
-	}
-	
-	/**
-	 * Allows setting the acceleration.
-	 * 
-	 * @param accX x component of acceleration
-	 * @param accY y component of acceleration
-	 */
-	
-	public void setAccelleration(double accX, double accY){
-		aPoint.setLocation(accX, accY);
-	}
-	
-	/**
-	 * Allows setting the speed.
-	 * 
-	 * @param dx delta x, the x component of velocity
-	 * @param dy delta y, the y component of velocity
-	 */
-	
-	public void setVelocity(double dx, double dy){
-		dPoint.setLocation(dx, dy);
-	}
-	
-	public static void setDimensions(Point dim){
-		dimensions = dim;
-	}
-	
-	public static void setAnimationSource(BufferedImage source){
-		sourceImage = source;
+	public static void setAnimationSource(Image image){
+		sourceImage = (BufferedImage) image;
 	}
 	
 	public static BufferedImage calculateFrames(int width, int height){
@@ -279,36 +145,24 @@ public class Entity extends Drawable {
 			return null;
 		}
 	}
-
-	public Point getAccelleration(){
-		return aPoint;
+	
+	public void rotate(double rads, int x, int y){
+		//TODO: Write method
 	}
 	
-	public void keyPressed(KeyEvent e){
-		if(e.getKeyCode() == KeyEvent.VK_W){
-			WkeyDown = true;
-		}else if(e.getKeyCode() == KeyEvent.VK_A){
-			AkeyDown = true;
-		}else if(e.getKeyCode() == KeyEvent.VK_D){
-			DkeyDown = true;
-		}
+	public void setVelocity(Point.Double velocity){
+		this.velocity = velocity;
 	}
 	
-	public void keyReleased(KeyEvent e){
-		if(e.getKeyCode() == KeyEvent.VK_W){
-			WkeyDown = false;
-		}else if(e.getKeyCode() == KeyEvent.VK_A){
-			AkeyDown = false;
-		}else if(e.getKeyCode() == KeyEvent.VK_D){
-			DkeyDown = false;
-		}
+	public Point.Double getVelocity(){
+		return velocity;
 	}
 	
-	public Point getVelocity(){
-		return dPoint;
+	public void setAcceleration(Point.Double acceleration){
+		this.acceleration = acceleration;
 	}
 	
-	public static Point getDimensions(){
-		return dimensions;
+	public Point.Double getAcceleration(){
+		return acceleration;
 	}
 }

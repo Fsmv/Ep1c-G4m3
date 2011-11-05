@@ -1,3 +1,22 @@
+/*  
+ *  Ep1c G4m3 -- A parody platformer
+ * 
+ *  Copyright (C) 2011  Voracious Softworks
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ */
+
 package com.voracious.ep1cG4m3.utils;
 
 import java.awt.Color;
@@ -22,15 +41,18 @@ import com.voracious.ep1cG4m3.framework.Drawable;
 
 public class Text extends Drawable {
 	
-	public static final int FONT_WIDTH = 5;
-	public static final int FONT_HEIGHT = 7;
-	
-	public static BufferedImage fontImg;
+	private static final long serialVersionUID = 6401867774229024720L;
+	public static final int FONT_WIDTH = 6;
+	public static final int FONT_HEIGHT = 8;
 	
 	private String myText;
 	private int mySpacing;
 	private int mySize;
 	private Color myColor;
+	private static final String chars = "" + //
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZ.,!?\"'/\\<>()[]{}" + //
+	"abcdefghijklmnopqrstuvwxyz_               " + //
+	"0123456789+-=*:;";//
 	
 	/**
 	 * Make an empty object
@@ -47,7 +69,7 @@ public class Text extends Drawable {
 	 */
 	
 	public Text(String text){
-		super(parseString(text, 7, 1, Color.BLACK), true);
+		super(parseString(text, 7, 1, Color.BLACK));
 		myText = text;
 		mySpacing = 1;
 		mySize = 7;
@@ -62,7 +84,7 @@ public class Text extends Drawable {
 	 */
 	
 	public Text(String text, Point point){
-		super(parseString(text, 7, 1, Color.BLACK), true, point);
+		super(parseString(text, 8, 0, Color.BLACK), point);
 		myText = text;
 		mySpacing = 1;
 		mySize = 7;
@@ -70,7 +92,7 @@ public class Text extends Drawable {
 	}
 	
 	public Text(String text, Point point, int size){
-		super(parseString(text, size, 1, Color.BLACK), true, point);
+		super(parseString(text, size, 0, Color.BLACK), point);
 		myText = text;
 		mySpacing = 1;
 		mySize = size;
@@ -78,7 +100,7 @@ public class Text extends Drawable {
 	}
 	
 	public Text(String text, Point point, int size, int spacing){
-		super(parseString(text, size, spacing, Color.BLACK), true, point);
+		super(parseString(text, size, spacing, Color.BLACK), point);
 		myText = text;
 		mySpacing = spacing;
 		mySize = size;
@@ -86,15 +108,11 @@ public class Text extends Drawable {
 	}
 	
 	public Text(String text, Point point, int size, int spacing, Color color){
-		super(parseString(text, size, spacing, color), true, point);
+		super(parseString(text, size, spacing, color), point);
 		myText = text;
 		mySpacing = spacing;
 		mySize = size;
 		myColor = color;
-	}
-	
-	public static void setFont(BufferedImage image){
-		fontImg = image;
 	}
 	
 	/**
@@ -104,9 +122,10 @@ public class Text extends Drawable {
 	 * @return string converted into an image
 	 */
 	
-	public static BufferedImage parseString(String text, int size, int spacing, Color color){
+	private static BufferedImage parseString(String text, int size, int spacing, Color color){
 		int numLines = 1;
 		int maxCharsPerLine = 0;
+		BufferedImage fontImg = Art.font;
 		
 		int tempCount = 0;
 		for(int i=0; i<text.length(); i++){
@@ -135,16 +154,16 @@ public class Text extends Drawable {
 				currentLine++;
 				currentCharInLine = 0;
 			}else{
-				int charCode = (int)text.charAt(i);
-				if(charCode < 32 && charCode > 176){
-					charCode = 177; //This is the fallback character.
-				}			
+				int charCode = chars.indexOf(text.charAt(i));		
 				
-				BufferedImage letter = fontImg.getSubimage(((charCode-32)%(fontImg.getWidth()/FONT_WIDTH))*FONT_WIDTH,((charCode-32)/(fontImg.getWidth()/FONT_WIDTH))*FONT_HEIGHT, FONT_WIDTH, FONT_HEIGHT);
-				if(size != 7)
+				int row = (charCode)/(fontImg.getWidth()/FONT_WIDTH);
+				BufferedImage letter = fontImg.getSubimage(((charCode)%(fontImg.getWidth()/FONT_WIDTH) - row)*FONT_WIDTH, row*FONT_HEIGHT, FONT_WIDTH, FONT_HEIGHT);
+				
+				if(size != 8)
 					letter = scale(letter, size);
 				if(color != Color.WHITE)
 					letter = changeColor(letter, color);
+				
 				g2.drawImage(letter, null, letterWidth*currentCharInLine + (currentCharInLine*spacing), letterHeight*currentLine + currentLine);
 				currentCharInLine++;
 			}
@@ -153,7 +172,7 @@ public class Text extends Drawable {
 		return result;
 	}
 	
-	public static BufferedImage scale(BufferedImage image, int size){
+	private static BufferedImage scale(BufferedImage image, int size){
 		BufferedImage result = new BufferedImage(FONT_WIDTH+(size-FONT_HEIGHT), size, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = result.createGraphics();
 		
@@ -163,7 +182,7 @@ public class Text extends Drawable {
 		return result;
 	}
 	
-	public static BufferedImage changeColor(BufferedImage image, final Color color){
+	private static BufferedImage changeColor(BufferedImage image, final Color color){
 		ImageFilter filter = new RGBImageFilter() {
             public final int filterRGB(int x, int y, int rgb) {
                     if (rgb == Color.WHITE.getRGB()) {
@@ -270,3 +289,4 @@ public class Text extends Drawable {
 		return myColor;
 	}
 }
+
