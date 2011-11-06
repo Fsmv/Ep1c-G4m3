@@ -23,6 +23,7 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -31,6 +32,7 @@ import javax.swing.Timer;
 import com.voracious.ep1cG4m3.framework.Screen;
 import com.voracious.ep1cG4m3.screens.Menu;
 import com.voracious.ep1cG4m3.screens.Preloader;
+import com.voracious.ep1cG4m3.utils.Logger;
 import com.voracious.ep1cG4m3.utils.ScreenResultListener;
 
 /**
@@ -61,6 +63,7 @@ public class Main extends JPanel implements ScreenResultListener, ActionListener
 		CardLayout layout = new CardLayout();
 		panel.setLayout(layout);
 		panel.setOpaque(false);
+		Logger.setLogFile(new File("log.txt"));
 		
 		for(int i=0; i<screens.length; i++)
 			panel.add(screens[i], Integer.toString(i));
