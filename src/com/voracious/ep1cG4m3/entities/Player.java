@@ -19,7 +19,11 @@
 
 package com.voracious.ep1cG4m3.entities;
 
+import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -40,6 +44,7 @@ public class Player extends Entity {
 	private Drawable gun;
 	private ArrayList<Entity> bullets;
 	private double gunRotation;
+	private boolean facingRight = true;
 	
 	/**
 	 * Initialize a new player object
@@ -50,6 +55,39 @@ public class Player extends Entity {
 		this.setAnimation("standing");
 		gun = new Drawable(this.getResource("gun"));
 		bullets = new ArrayList<Entity>();
+	}
+	
+	@Override
+	public void update(long dt){
+		super.update(dt);
+		
+		if(this.getVelocity().x < 0 && facingRight)
+			facingRight = false;
+		else if(this.getVelocity().x > 0 && !facingRight)
+			facingRight = true;
+		
+		BufferedImage image = new BufferedImage(this.getIconWidth(), this.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics g = image.getGraphics();
+		
+		if(facingRight){
+			g.drawImage(this.getImage(), 0, 0, null); //Using getImage works consistently because super.update sets it based on the animation
+			g.drawImage(gun.getImage(), this.getIconWidth()/2, this.getIconHeight()/3, null);
+		}else{
+			AffineTransform tx = AffineTransform.getScaleInstance(-1, 1); //flip horizontally
+			tx.translate(-image.getWidth(null), 0);
+			AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+			
+			g.drawImage(gun.getImage(), this.getIconWidth()/2, this.getIconHeight()/3, null);
+			g.drawImage(op.filter((BufferedImage)this.getImage(), null), 0, 0, null);
+		}
+		
+		g.dispose();
+		
+		this.setImage(image);
+		
+		for(Entity b : bullets){
+			b.update(dt);
+		}
 	}
 	
 	/**
