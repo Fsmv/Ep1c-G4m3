@@ -24,6 +24,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Point2D.Double;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
@@ -80,5 +81,16 @@ public class Drawable extends ImageIcon {
 		Point loc = getLocation();
 		BufferedImage img = (BufferedImage) getImage();
 		return new Rectangle((int)loc.getX(), (int)loc.getY(), img.getWidth(), img.getHeight());
+	}
+	
+	/**
+	 * Rotates the image by [rads] radians
+	 * 
+	 * @param rads radians to rotate to
+	 * @param axis point to rotate around
+	 */
+
+	public void rotate(double rads, Point.Double axis){
+		//TODO: Write method
 	}
 }

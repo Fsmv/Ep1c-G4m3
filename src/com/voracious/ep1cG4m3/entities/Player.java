@@ -19,13 +19,75 @@
 
 package com.voracious.ep1cG4m3.entities;
 
+import java.awt.Point;
+import java.io.File;
+import java.util.ArrayList;
+
+import com.voracious.ep1cG4m3.framework.Drawable;
 import com.voracious.ep1cG4m3.framework.Entity;
-import com.voracious.ep1cG4m3.utils.Art;
+
+/**
+ * Represents the player. A user should be able to control the actions of this object.
+ * 
+ * @author Voracious Softworks
+ */
 
 public class Player extends Entity {
+	private static final long serialVersionUID = 7613641952651564431L;
+
+	public static final int BULLET_SPEED = 15;
+	
+	private Drawable gun;
+	private ArrayList<Entity> bullets;
+	private double gunRotation;
+	
+	/**
+	 * Initialize a new player object
+	 */
 	
 	public Player(){
-		super();
-		Player.setAnimationSource(Art.playerFrames);
+		super(new File("entities/player/"));
+		this.setAnimation("standing");
+		gun = new Drawable(this.getResource("gun"));
+		bullets = new ArrayList<Entity>();
+	}
+	
+	/**
+	 * Rotate the player's gun
+	 * 
+	 * @param location point the rotate to face. (Usually the mouse pointer location)
+	 */
+	
+	public void pointAt(Point.Double location){
+		Point.Double axis = new Point.Double(10.0, (double) gun.getIconHeight()/2);
+		double rads = Math.atan((location.y-axis.y)/(location.x-axis.x));
+		setGunRotation(rads);
+		gun.rotate(rads, axis);
+	}
+	
+	/**
+	 * Cause the player to fire a bullet
+	 */
+	
+	public void shoot(){
+		Entity temp = new Entity(this.getResource("bullet"));
+		temp.setVelocity(new Point.Double(BULLET_SPEED*Math.cos(getGunRotation()), BULLET_SPEED*Math.sin(getGunRotation())));
+		bullets.add(temp);
+	}
+	
+	/**
+	 * @return the gunRotation
+	 */
+	
+	public double getGunRotation() {
+		return gunRotation;
+	}
+
+	/**
+	 * @param gunRotation the gunRotation to set
+	 */
+	
+	private void setGunRotation(double gunRotation) {
+		this.gunRotation = gunRotation;
 	}
 }

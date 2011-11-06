@@ -19,11 +19,11 @@
 
 package com.voracious.ep1cG4m3.framework;
 
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
 
 import com.voracious.ep1cG4m3.utils.Animation;
 import com.voracious.ep1cG4m3.utils.Art;
@@ -38,8 +38,8 @@ import com.voracious.ep1cG4m3.utils.Art;
 
 public class Entity extends Drawable {
 	private static final long serialVersionUID = -1211928635812350349L;
-	private Map<String, Animation> animations;
-	private Map<String, BufferedImage> resources;
+	private HashMap<String, Animation> animations;
+	private HashMap<String, BufferedImage> resources;
 	private String currentAnimation;
 	private Point.Double velocity;
 	private Point.Double acceleration;
@@ -52,14 +52,13 @@ public class Entity extends Drawable {
 
 	public Entity(){
 		super();
-		animations = new HashMap<String, Animation>();
 		velocity = new Point.Double(0, 0);
 		acceleration = new Point.Double(0, 0);
 		currentAnimation = "";
 	}
 
 	/**
-	 * Initializes Entity with a width and height used to run calculateFrames
+	 * Initializes Entity and loads the resources from resource folder
 	 * 
 	 * @param width image width
 	 * @param height image height
@@ -69,6 +68,19 @@ public class Entity extends Drawable {
 		super();
 		loadAnimations(resourceFolder);
 		loadResources(resourceFolder);
+	}
+	
+	/**
+	 * Initializes entity without Animation functionality
+	 * 
+	 * @param image the image to display
+	 */
+	
+	public Entity(Image image){
+		super(image);
+		velocity = new Point.Double(0, 0);
+		acceleration = new Point.Double(0, 0);
+		currentAnimation = "";
 	}
 
 	/**
@@ -126,7 +138,7 @@ public class Entity extends Drawable {
 	 * @return list of animations
 	 */
 
-	public Map<String, Animation> getAnimations(){
+	public HashMap<String, Animation> getAnimations(){
 		return animations;
 	}
 	
@@ -154,7 +166,11 @@ public class Entity extends Drawable {
 	 */
 
 	public Animation getCurrentAnimation(){
-		return getAnimation(currentAnimation);
+		try{
+			return getAnimation(currentAnimation);
+		}catch(IllegalArgumentException e){
+			return null;
+		}
 	}
 
 	/**
@@ -182,10 +198,8 @@ public class Entity extends Drawable {
 
 	/**
 	 * Cuts the animation frames out of the source image.
-	 * 
-	 * @param width image width
-	 * @param height image height
-	 * @return The first frame
+	 *
+	 * @param resourceFolder the folder that contains the source image
 	 */
 
 	private void loadAnimations(File resourceFolder){
@@ -236,6 +250,12 @@ public class Entity extends Drawable {
 		}
 	}
 	
+	/**
+	 * Cuts the resource images out of the source image.
+	 * 
+	 * @param resourceFolder the folder that contains the source image
+	 */
+	
 	private void loadResources(File resourceFolder){
 		if(resourceFolder.canRead() && resourceFolder.isDirectory()){
 			if(new File(resourceFolder.getPath(), "rsc.png").exists()){
@@ -285,7 +305,14 @@ public class Entity extends Drawable {
 			throw new IllegalArgumentException("resourceFolder is not a directory. Path = " + resourceFolder.getAbsolutePath());
 		}
 	}
-
+	
+	/**
+	 * Turns a hex number represented into as a string into a string of ascii chars
+	 * 
+	 * @param hex value to translate
+	 * @return translated hex
+	 */
+	
 	public static String hexToString(String hex){
 		String result = "";
 		for(int i=0; i<hex.length()-1; i+=2 ){
@@ -293,6 +320,7 @@ public class Entity extends Drawable {
 			int decimal = Integer.parseInt(substr, 16);
 			result += (char)decimal;
 		}
+		
 		return result;
 	}
 
@@ -326,16 +354,5 @@ public class Entity extends Drawable {
 
 	public Point.Double getAcceleration(){
 		return acceleration;
-	}
-
-	/**
-	 * Rotates the image by [rads] radians
-	 * 
-	 * @param rads radians to rotate to
-	 * @param p point to rotate around
-	 */
-
-	public void rotate(double rads, Point p){
-		//TODO: Write method
 	}
 }
