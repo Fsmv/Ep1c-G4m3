@@ -7,12 +7,12 @@ Entity
 The top row of pixels is for data.
  * (0, 0) color is 0xWWHH00 where WW is width in hex and HH is height in hex.
  * (0, 1-4 * k) color is the name for animation number k.
-   1. Convert your [String into hex](http://www.string-functions.com/string-hex.aspx) (12 char max).
-   2. Split the output into groups of six numbers, each group of six is a pixel color.
-   3. If you don't fill up 12 characters pad the rest with 0
+    1. Convert your [String into hex](http://www.string-functions.com/string-hex.aspx) (12 char max).
+    2. Split the output into groups of six numbers, each group of six is a pixel color.
+    3. If you don't fill up 12 characters pad the rest with 0
  * (0, 5 * k) color is the number of frames in the previously named animation
-   * Frame numbers go left to right, when it hits the end of the image it starts at the left in the next row.
-   * Lead with 0s for example: if you have 3 frames your color would be 0x000003
+    * Frame numbers go left to right, when it hits the end of the image it starts at the left in the next row.
+    * Lead with 0s for example: if you have 3 frames your color would be 0x000003
  * The program stops reading the data line when it sees 0xFFFFFF
 
 The rest of the image is for the frames.
