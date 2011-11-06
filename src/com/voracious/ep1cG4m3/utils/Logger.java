@@ -22,7 +22,9 @@ public class Logger {
 					throw new IOException("ERROR: logfile (" + getLogFile().toString() + ") is null");
 				}else{
 					if (!getLogFile().exists()) {
-						throw new IOException("ERROR: logfile (" + getLogFile().toString() + ") does not exist");
+						FileWriter fstream = new FileWriter(logfile);
+						log = new BufferedWriter(fstream);
+						log.write("");
 					}else{
 						if (!getLogFile().isFile()) {
 							throw new IOException("ERROR: logfile (" + getLogFile().toString() + ") is a directory");

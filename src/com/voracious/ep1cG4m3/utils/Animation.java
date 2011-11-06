@@ -125,6 +125,16 @@ public class Animation {
 	}
 	
 	/**
+	 * Appends a frame to the list
+	 * 
+	 * @param frame frame to append
+	 */
+	
+	public void addFrame(BufferedImage frame){
+		frames.add(frame);
+	}
+	
+	/**
 	 * Changes the current frame to the supplied value.
 	 * 
 	 * @param frame frame to switch to

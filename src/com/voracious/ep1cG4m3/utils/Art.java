@@ -26,8 +26,6 @@ import javax.imageio.ImageIO;
 public class Art {
 	public static BufferedImage font = loadImage("/font.png");
 	public static BufferedImage tiles = loadImage("/tiles.png");
-	public static BufferedImage playerRSC = loadImage("/entities/player/rsc.png");
-	public static BufferedImage playerFrames = loadImage("/entities/player/player.png");
 	
 	public static BufferedImage loadImage(String fileName){
 		try{

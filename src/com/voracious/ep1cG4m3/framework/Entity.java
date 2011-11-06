@@ -39,6 +39,7 @@ import com.voracious.ep1cG4m3.utils.Art;
 public class Entity extends Drawable {
 	private static final long serialVersionUID = -1211928635812350349L;
 	private Map<String, Animation> animations;
+	private Map<String, BufferedImage> resources;
 	private String currentAnimation;
 	private Point.Double velocity;
 	private Point.Double acceleration;
@@ -66,7 +67,8 @@ public class Entity extends Drawable {
 
 	public Entity(File resourceFolder){
 		super();
-		animations = loadAnimations(resourceFolder);
+		loadAnimations(resourceFolder);
+		loadResources(resourceFolder);
 	}
 
 	/**
@@ -79,6 +81,32 @@ public class Entity extends Drawable {
 
 	public void addAnimation(String animationName, Animation animation){
 		animations.put(animationName, animation);
+	}
+	
+	/**
+	 * Adds a resource to the list of resources for this entity.
+	 * 
+	 * @param resourceName name to identify the resource with
+	 * @param resource resource object to be added
+	 */
+
+	public void addResource(String resourceName, BufferedImage resource){
+		resources.put(resourceName, resource);
+	}
+	
+	/**
+	 * Get a resource by its name
+	 * 
+	 * @param name the name of the resource to get
+	 * @return the resource
+	 * @throws IllegalArgumentException When animation doesn't exist
+	 */
+	
+	public BufferedImage getResource(String name){
+		if(resources.containsKey(name))
+			return resources.get(name);
+		else
+			throw new IllegalArgumentException("Resource (\"" + name + "\") not found");
 	}
 
 	/**
@@ -101,6 +129,22 @@ public class Entity extends Drawable {
 	public Map<String, Animation> getAnimations(){
 		return animations;
 	}
+	
+	/**
+	 * Get an animation by its name
+	 * 
+	 * @param name the name of the animation to get
+	 * @return the animation
+	 * @throws IllegalArgumentException When animation doesn't exist
+	 * @see Animation
+	 */
+	
+	public Animation getAnimation(String name){
+		if(animations.containsKey(name))
+			return animations.get(name);
+		else
+			throw new IllegalArgumentException("Animation (\"" + name + "\") not found");
+	}
 
 	/**
 	 * Supplies the current animation.
@@ -109,8 +153,8 @@ public class Entity extends Drawable {
 	 * @see Animation
 	 */
 
-	public String getCurrentAnimation(){
-		return currentAnimation;
+	public Animation getCurrentAnimation(){
+		return getAnimation(currentAnimation);
 	}
 
 	/**
@@ -131,8 +175,8 @@ public class Entity extends Drawable {
 		this.setLocation(loc);
 		this.setVelocity(vel);
 
-		if(getCurrentAnimation() != null && getCurrentAnimation() != ""){
-			this.setImage(getAnimations().get(getCurrentAnimation()).getImage());
+		if(getCurrentAnimation() != null){
+			this.setImage(getCurrentAnimation().getImage());
 		}
 	}
 
@@ -144,25 +188,20 @@ public class Entity extends Drawable {
 	 * @return The first frame
 	 */
 
-	private HashMap<String, Animation> loadAnimations(File resourceFolder){
-		HashMap<String, Animation> result = new HashMap<String, Animation>();
+	private void loadAnimations(File resourceFolder){
 		if(resourceFolder.canRead() && resourceFolder.isDirectory()){
 			BufferedImage frames = Art.loadImage(resourceFolder.getPath() + "/" + resourceFolder.getName() + ".png");
 
 			int tempColor = frames.getRGB(0, 0);
-			System.out.println("width:  " + (tempColor & 0xff0000)/0x10000);
-			System.out.println("height: " + (tempColor & 0x00ff00)/0x100);
+			int width = (tempColor & 0xff0000)/0x10000;
+			int height = (tempColor & 0x00ff00)/0x100;
 
-			int frameSet = 1;
 			for(int xx=1; xx<frames.getWidth(); xx++){
 				int color = frames.getRGB(xx, 0);
 				if(frames.getRGB(xx, 0) == 0xffffffff)
 					break;
-
-				if(xx%5 == 0){
-					System.out.println("Number of frames: " + (color-0xff000000));
-				}else if(xx%5 == 1){
-					System.out.println("Frame set:        " + frameSet);
+				
+				if(xx%5 == 1){
 					String hex = "";
 					for(int i=0; i<4; i++){
 						color = frames.getRGB(xx+i, 0) - 0xff000000;
@@ -181,16 +220,27 @@ public class Entity extends Drawable {
 						}else
 							hex += Integer.toHexString(color);
 					}
-					xx += 3;
-					frameSet++;
-					System.out.println("Name:             " + hexToString(hex));
+					xx += 4;
+					
+					int numFrames = frames.getRGB(xx+1, 0)-0xff000000;
+					Animation temp = new Animation();
+					for(int i=0; i<numFrames; i++){
+						temp.addFrame(frames.getSubimage((i*width)%frames.getWidth(), height*((i*width)/frames.getWidth()), width, height));
+					}
+					
+					addAnimation(hexToString(hex), temp);
 				}
 			}
+		}else{
+			throw new IllegalArgumentException("resourceFolder is not a directory. Path = " + resourceFolder.getAbsolutePath());
+		}
+	}
+	
+	private void loadResources(File resourceFolder){
+		if(resourceFolder.canRead() && resourceFolder.isDirectory()){
 			if(new File(resourceFolder.getPath(), "rsc.png").exists()){
-				System.out.println("\nAdditional resources");
 				BufferedImage rsc = Art.loadImage(resourceFolder.getPath() + "/rsc.png");
 
-				int rscNum = 1;
 				for(int xx=0; xx < rsc.getWidth(); xx++){
 					if(rsc.getRGB(xx, 0) == 0xffffffff && rsc.getRGB(xx, 1) == 0xffffffff)
 						break;
@@ -217,26 +267,23 @@ public class Entity extends Drawable {
 								}
 							}
 						xx++;
-						System.out.println("Number: " + rscNum);
-						System.out.println("Name: " + hexToString(hex));
-					}else if(xx%3 == 2){
-						int colorTop = rsc.getRGB(xx, 0) - 0xff000000;
-						int colorBottom = rsc.getRGB(xx, 1) - 0xff000000;
+						String name = hexToString(hex);
+						
+						int colorTop = rsc.getRGB(xx+1, 0) - 0xff000000;
+						int colorBottom = rsc.getRGB(xx+1, 1) - 0xff000000;
 
 						int x = (colorTop & 0xff0000)/0x10000;
 						int y = (colorTop & 0x00ff00)/0x100;
 						int width = (colorBottom & 0xff0000)/0x10000;
 						int height = (colorBottom & 0x00ff00)/0x100;
 
-						System.out.println("Dimensions: " + x + ", " + y + ", " + width + ", " + height);
-						rscNum++;
+						addResource(name, rsc.getSubimage(x, y, width, height));
 					}
 				}
 			}
 		}else{
 			throw new IllegalArgumentException("resourceFolder is not a directory. Path = " + resourceFolder.getAbsolutePath());
 		}
-		return result;
 	}
 
 	public static String hexToString(String hex){
