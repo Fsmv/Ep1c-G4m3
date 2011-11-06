@@ -51,7 +51,7 @@ public class Entity extends Drawable {
 
 	public Entity(){
 		super();
-		myAnimations = new HashMap<String, Animation>();
+		animations = new HashMap<String, Animation>();
 		velocity = new Point.Double(0, 0);
 		acceleration = new Point.Double(0, 0);
 		currentAnimation = "";
@@ -66,7 +66,7 @@ public class Entity extends Drawable {
 
 	public Entity(File resourceFolder){
 		super();
-		myAnimations = loadAnimations(resourceFolder);
+		animations = loadAnimations(resourceFolder);
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class Entity extends Drawable {
 	 */
 
 	public void addAnimation(String animationName, Animation animation){
-		myAnimations.put(animationName, animation);
+		animations.put(animationName, animation);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class Entity extends Drawable {
 	 */
 
 	public Map<String, Animation> getAnimations(){
-		return myAnimations;
+		return animations;
 	}
 
 	/**
@@ -145,58 +145,98 @@ public class Entity extends Drawable {
 	 */
 
 	private HashMap<String, Animation> loadAnimations(File resourceFolder){
+		HashMap<String, Animation> result = new HashMap<String, Animation>();
 		if(resourceFolder.canRead() && resourceFolder.isDirectory()){
 			BufferedImage frames = Art.loadImage(resourceFolder.getPath() + "/" + resourceFolder.getName() + ".png");
 
-			int col = frames.getRGB(0, 0);
-			System.out.println("width:  " + (col & 0xff0000)/0xffff);
-			System.out.println("height: " + (col & 0x00ff00)/0xff);
+			int tempColor = frames.getRGB(0, 0);
+			System.out.println("width:  " + (tempColor & 0xff0000)/0x10000);
+			System.out.println("height: " + (tempColor & 0x00ff00)/0x100);
 
 			int frameSet = 1;
 			for(int xx=1; xx<frames.getWidth(); xx++){
-				int color = frames.getRGB(xx, 0) ^ 0xff000000;
-
-				if(color == 0xffffff)
+				int color = frames.getRGB(xx, 0);
+				if(frames.getRGB(xx, 0) == 0xffffffff)
 					break;
 
-				int a = (color & 0xff0000)/0xffff;
-				int b = (color & 0x00ff00)/0xff;
-				int c = (color & 0x0000ff);
-
 				if(xx%5 == 0){
-					System.out.println("Number of frames: " + color); 
+					System.out.println("Number of frames: " + (color-0xff000000));
 				}else if(xx%5 == 1){
 					System.out.println("Frame set:        " + frameSet);
-					String result = "";
+					String hex = "";
 					for(int i=0; i<4; i++){
 						color = frames.getRGB(xx+i, 0) - 0xff000000;
-						a = (color & 0xff0000)/0xffff;
-						b = (color & 0x00ff00)/0xff;
-						c = (color & 0x0000ff);
+						int a = (color & 0xff0000)/0x10000;
+						int b = (color & 0x00ff00)/0x100;
+						int c = (color & 0x0000ff);
 
 						if(a == 0){
 							break;
 						}else if(b == 0){
-							result += Integer.toHexString(a);
+							hex += Integer.toHexString(a);
 							break;
 						}else if(c == 0){
-							result += Integer.toHexString((a*0x100)+b);
+							hex += Integer.toHexString((a*0x100)+b);
 							break;
-						}else{
-							result += Integer.toHexString(color);
-						}
+						}else
+							hex += Integer.toHexString(color);
 					}
 					xx += 3;
 					frameSet++;
-					System.out.println("Name:             " + hexToString(result));
+					System.out.println("Name:             " + hexToString(hex));
 				}
 			}
 			if(new File(resourceFolder.getPath(), "rsc.png").exists()){
+				System.out.println("\nAdditional resources");
 				BufferedImage rsc = Art.loadImage(resourceFolder.getPath() + "/rsc.png");
+
+				int rscNum = 1;
+				for(int xx=0; xx < rsc.getWidth(); xx++){
+					if(rsc.getRGB(xx, 0) == 0xffffffff && rsc.getRGB(xx, 1) == 0xffffffff)
+						break;
+
+					if(xx%3 == 0){
+						String hex = "";
+						outter:
+							for(int col=0; col<2; col++){
+								for(int row=0; row<2; row++){
+									int color = rsc.getRGB(xx+row, col) - 0xff000000;
+									int a = (color & 0xff0000)/0x10000;
+									int b = (color & 0x00ff00)/0x100;
+									int c = (color & 0x0000ff);
+									if(a == 0){
+										break outter;
+									}else if(b == 0){
+										hex += Integer.toHexString(a);
+										break outter;
+									}else if(c == 0){
+										hex += Integer.toHexString((a*0x100)+b);
+										break outter;
+									}else
+										hex += Integer.toHexString(color);
+								}
+							}
+						xx++;
+						System.out.println("Number: " + rscNum);
+						System.out.println("Name: " + hexToString(hex));
+					}else if(xx%3 == 2){
+						int colorTop = rsc.getRGB(xx, 0) - 0xff000000;
+						int colorBottom = rsc.getRGB(xx, 1) - 0xff000000;
+
+						int x = (colorTop & 0xff0000)/0x10000;
+						int y = (colorTop & 0x00ff00)/0x100;
+						int width = (colorBottom & 0xff0000)/0x10000;
+						int height = (colorBottom & 0x00ff00)/0x100;
+
+						System.out.println("Dimensions: " + x + ", " + y + ", " + width + ", " + height);
+						rscNum++;
+					}
+				}
 			}
 		}else{
 			throw new IllegalArgumentException("resourceFolder is not a directory. Path = " + resourceFolder.getAbsolutePath());
 		}
+		return result;
 	}
 
 	public static String hexToString(String hex){
