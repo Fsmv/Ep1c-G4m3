@@ -118,21 +118,22 @@ public class Entity extends Drawable {
 	 * Causes the Entity to accelerate, move, and to display the next animation frame.
 	 * 
 	 * @see Animation
+	 * @param dt delta time, Amount of time elapsed since last update in milliseconds
 	 */
 	
-	public void update(){
+	public void update(long dt){
 		Point loc = getLocation();
 		Point.Double vel = getVelocity();
 		Point.Double acc = getAcceleration();
 		
-		vel.setLocation(vel.getX()+acc.getX(), vel.getY()+acc.getY());
-		loc.setLocation(loc.getX()+vel.getX(), loc.getY()+vel.getY());
+		vel.setLocation(vel.getX()+(acc.getX()*dt), vel.getY()+(acc.getY()*dt));
+		loc.setLocation(loc.getX()+(vel.getX()*dt), loc.getY()+(vel.getY()*dt));
 		
 		this.setLocation(loc);
 		this.setVelocity(vel);
 		
 		if(getCurrentAnimation() != null && getCurrentAnimation() != ""){
-			this.setImage(getAnimations().get(getCurrentAnimation()).getNextFrame());
+			this.setImage(getAnimations().get(getCurrentAnimation()).getImage());
 		}
 	}
 	
