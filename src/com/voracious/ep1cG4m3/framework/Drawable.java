@@ -21,10 +21,10 @@ package com.voracious.ep1cG4m3.framework;
 
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.Point2D.Double;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
@@ -86,11 +86,18 @@ public class Drawable extends ImageIcon {
 	/**
 	 * Rotates the image by [rads] radians
 	 * 
-	 * @param rads radians to rotate to
+	 * @param theta radians to rotate to
 	 * @param axis point to rotate around
 	 */
 
-	public void rotate(double rads, Point.Double axis){
-		//TODO: Write method
+	public void rotate(double theta, Point.Double axis){
+		BufferedImage currImg = (BufferedImage) getImage();
+		BufferedImage newImg = new BufferedImage(currImg.getWidth(), currImg.getHeight(), currImg.getType());
+		Graphics2D g2 = (Graphics2D) newImg.getGraphics();
+		g2.rotate(theta, axis.x, axis.y);
+		g2.drawImage(currImg, null, 0, 0);
+		g2.rotate(0, axis.x, axis.y);
+		g2.dispose();
+		setImage(newImg);
 	}
 }
