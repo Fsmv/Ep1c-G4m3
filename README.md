@@ -3,7 +3,7 @@ Contributing
 
 Ask
 ------
-You _might_ want to submit a [issue](https://github.com/Fsmv/Ep1c-G4m3/issues/new) with the lavel 'Suggestion' first to make sure I'll merge it if you make it.
+You _might_ want to submit a [issue](https://github.com/Fsmv/Ep1c-G4m3/issues/new) with the label 'Suggestion' first to make sure I'll merge it if you make it.
 
 Code
 ------
