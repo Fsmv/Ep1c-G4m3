@@ -242,7 +242,7 @@ public class Entity extends Drawable {
 						temp.addFrame(frames.getSubimage((i*width)%frames.getWidth(), height*((i*width)/frames.getWidth()), width, height));
 					}
 					
-					addAnimation(hexToString(hex), temp);
+					addAnimation(Art.hexToString(hex), temp);
 				}
 			}
 		}else{
@@ -287,7 +287,7 @@ public class Entity extends Drawable {
 								}
 							}
 						xx++;
-						String name = hexToString(hex);
+						String name = Art.hexToString(hex);
 						
 						int colorTop = rsc.getRGB(xx+1, 0) - 0xff000000;
 						int colorBottom = rsc.getRGB(xx+1, 1) - 0xff000000;
@@ -306,24 +306,6 @@ public class Entity extends Drawable {
 		}
 	}
 	
-	/**
-	 * Turns a hex number represented into as a string into a string of ascii chars
-	 * 
-	 * @param hex value to translate
-	 * @return translated hex
-	 */
-	
-	public static String hexToString(String hex){
-		String result = "";
-		for(int i=0; i<hex.length()-1; i+=2 ){
-			String substr = hex.substring(i, (i + 2));
-			int decimal = Integer.parseInt(substr, 16);
-			result += (char)decimal;
-		}
-		
-		return result;
-	}
-
 	/**
 	 * @param velocity velocity to set
 	 */

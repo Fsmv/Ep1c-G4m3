@@ -41,12 +41,26 @@ public class Level {
 	}
 	
 	public Tile getTile(int color){
-		if(color == 0xffffff) return new Tile(); //Air
+		if(color == 0xffffff) return new Tile(-1); //Air
 		//else if(color == 0xffff00) return new Brick(); 
 		else return null;
 	}
 	
 	public Entity getEntity(int color){
 		return null;
+	}
+
+	/**
+	 * @return the mapName
+	 */
+	public String getMapName() {
+		return mapName;
+	}
+
+	/**
+	 * @param mapName the mapName to set
+	 */
+	public void setMapName(String mapName) {
+		this.mapName = mapName;
 	}
 }

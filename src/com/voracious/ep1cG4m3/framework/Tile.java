@@ -21,6 +21,8 @@ package com.voracious.ep1cG4m3.framework;
 
 import java.awt.Image;
 
+import com.voracious.ep1cG4m3.utils.Art;
+
 /**
  * Represents a displayed tile.
  * 
@@ -33,24 +35,22 @@ public class Tile extends Drawable {
 	private boolean isAir;
 	private static Image image;
 	private int id;
-	
+	private static String name = "";
+
 	public Tile(int id){
 		super();
 		isTangible = false;
 		this.id = id;
 		
+		if(this.id < 0)
+			this.isAir = true;
+		else
+			this.isAir = false;
+
 		if(image == null){
-			loadImage();
-		}else{
-			 setImage(image);
+			image = Art.getTileImage(getName());
 		}
-	}
-	
-	/**
-	 * Finds and sets the tile's image based on its id
-	 */
-	public void loadImage(){
-		//TODO: Complete method
+		setImage(image);
 	}
 
 	/**
@@ -86,11 +86,11 @@ public class Tile extends Drawable {
 	 * 
 	 * @return Whether the block is air or not
 	 */
-	
+
 	public boolean isAir() {
 		return isAir;
 	}
-	
+
 	/**
 	 * If the block is air it will not be rendered
 	 * 
@@ -98,5 +98,19 @@ public class Tile extends Drawable {
 	 */
 	public void setAir(boolean isAir) {
 		this.isAir = isAir;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public static String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public static void setName(String name) {
+		Tile.name = name;
 	}
 }
