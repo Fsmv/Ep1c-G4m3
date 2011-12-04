@@ -145,17 +145,17 @@ public class Play extends Screen{
 	
 	@Override
 	public void update(){
-		player.update();
+		//TODO: Physics
 	}
 	
 	public void setLocations(){
 		for(int r=0; r<levelTiles.length; r++){
 			for(int c=0; c<levelTiles[0].length; c++){
-				gameTiles.add(TileFactory.getNewTile(levelTiles[r][c]));
+				gameTiles.add(Tile.getTile(levelTiles[r][c]));
 				if(gameTiles.get(gameTiles.size()-1) == null)
 					gameTiles.remove(gameTiles.size()-1);
 				else{
-					gameTiles.get(gameTiles.size()-1).setLocation(new Point(c*TileFactory.TILE_SIZE,r*TileFactory.TILE_SIZE));
+					gameTiles.get(gameTiles.size()-1).setLocation(new Point(c*Tile.getTileSize(),r*Tile.getTileSize()));
 				}
 			}
 		}
@@ -163,7 +163,7 @@ public class Play extends Screen{
 		for(int r=0; r<entitiesStart.length; r++){
 			for(int c=0; c<entitiesStart[0].length; c++){
 				if(entitiesStart[r][c] == 1){
-					player.setLocation(new Point(c*TileFactory.TILE_SIZE,(int)(((r+1)*TileFactory.TILE_SIZE)-player.getBounds().getY())));
+					player.setLocation(new Point(c*Tile.getTileSize(),(int)(((r+1)*Tile.getTileSize())-player.getBounds().getY())));
 				}
 			}
 		}

@@ -1,5 +1,3 @@
-package com.voracious.ep1cG4m3.entities;
-
 /*  
  *  Ep1c G4m3 -- A parody platformer
  * 
@@ -14,15 +12,14 @@ package com.voracious.ep1cG4m3.entities;
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
-
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
+package com.voracious.ep1cG4m3.entities;
+
 import com.voracious.ep1cG4m3.framework.Entity;
 
 public class Enemy extends Entity {
-	public Enemy(int width, int height){
-		super(width, height);
-	}
 }

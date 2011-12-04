@@ -36,7 +36,7 @@ import com.voracious.ep1cG4m3.utils.Logger;
 import com.voracious.ep1cG4m3.utils.ScreenResultListener;
 
 /**
- * This is the naub class that coordinates all of the screens and owns the window.
+ * This is the main class that coordinates all of the screens and owns the window.
  * 
  * @author Voracious Softworks
  */
