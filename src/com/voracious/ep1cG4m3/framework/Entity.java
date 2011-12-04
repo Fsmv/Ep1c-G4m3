@@ -202,6 +202,12 @@ public class Entity extends Drawable {
 	 * @param resourceFolder the folder that contains the source image
 	 */
 
+	/*
+	 * This method has some code that is nearly the same as some code in the Art class.
+	 * The similar code is in the method loadTiles
+	 * This method is also similar to the loadResources method.
+	 */
+	
 	private void loadAnimations(File resourceFolder){
 		if(resourceFolder.canRead() && resourceFolder.isDirectory()){
 			BufferedImage frames = Art.loadImage(resourceFolder.getPath() + "/" + resourceFolder.getName() + ".png");

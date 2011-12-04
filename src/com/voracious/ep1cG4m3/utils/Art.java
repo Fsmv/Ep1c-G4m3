@@ -52,6 +52,11 @@ public class Art {
 	 * @param tileTextures The texture file to cut up
 	 * @return the HashMap with all of the images stored by name
 	 */
+	
+	/*
+	 * This method has some code that is nearly the same as some code in the Entity class.
+	 * The similar code is in the methods loadResources and loadAnimations
+	 */
 	private static HashMap<String, BufferedImage> loadTiles(BufferedImage tileTextures){
 		HashMap<String, BufferedImage> result = new HashMap<String, BufferedImage>();
 

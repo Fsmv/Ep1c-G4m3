@@ -20,8 +20,11 @@
 package com.voracious.ep1cG4m3.framework;
 
 import java.awt.Image;
+import java.util.HashMap;
 
+import com.voracious.ep1cG4m3.tiles.Brick;
 import com.voracious.ep1cG4m3.utils.Art;
+import com.voracious.ep1cG4m3.utils.Logger;
 
 /**
  * Represents a displayed tile.
@@ -33,9 +36,16 @@ public class Tile extends Drawable {
 	private static final long serialVersionUID = 7672342088231505969L;
 	private boolean isTangible;
 	private boolean isAir;
-	private static Image image;
 	private int id;
+	private static Image image;
 	private static String name = "";
+	public static int tileSize = 16;
+	public static HashMap<String, Class<? extends Tile>> tiles = new HashMap<String, Class<? extends Tile>>();
+	static{
+		tiles.put("air", Tile.class);
+		tiles.put(Brick.getName(), Brick.class);
+	}
+	
 
 	public Tile(int id){
 		super();
@@ -50,7 +60,24 @@ public class Tile extends Drawable {
 		if(image == null){
 			image = Art.getTileImage(getName());
 		}
-		setImage(image);
+		//This line sets the displayed image (Drawable.setImage()) to the stored static image for this tile type
+		setImage(image); //The names are confusing, I know. I'll think about changing this up. 
+	}
+	
+	/**
+	 * Called when an entity comes in contact with this tile
+	 * 
+	 * @param entity the entity that came in contact with this tile
+	 */
+	public static void onEntityContact(Entity entity){
+	}
+	
+	/**
+	 * Called when an entity breaks contact with this tile
+	 * 
+	 * @param entity the entity that broke contact with this tile
+	 */
+	public static void onEntityBreakContact(Entity entity){
 	}
 
 	/**
@@ -112,5 +139,65 @@ public class Tile extends Drawable {
 	 */
 	public static void setName(String name) {
 		Tile.name = name;
+	}
+	
+
+	/**
+	 * @return the tileSize
+	 */
+	public static int getTileSize() {
+		return tileSize;
+	}
+
+	/**
+	 * @param tileSize the tileSize to set
+	 */
+	public static void setTileSize(int tileSize) {
+		Tile.tileSize = tileSize;
+	}
+	
+	/**
+	 * Allows other classes to get new instances of tiles by name
+	 * 
+	 * @param name the name of the tile to return
+	 * @return the requested tile
+	 */
+	public static Tile getTile(String name){
+		//TODO: Make the game exit instead of just ignoring this error
+		//TODO: Also find the other Exceptions like this and do the same It's 01:30 I can't be bothered right now
+		//TODO: Thow an illegal argument exception if name doesn't exist
+		try {
+			return tiles.get(name).newInstance();
+		} catch (InstantiationException e) {
+			Logger.log(Logger.TYPE_ERROR, e.getStackTrace().toString());
+		} catch (IllegalAccessException e) {
+			Logger.log(Logger.TYPE_ERROR, e.getStackTrace().toString());
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Allows other classes to get new instances of tiles by id
+	 * 
+	 * @param id the id of the tile to return
+	 */
+	public static Tile getTile(int id){
+		//TODO: Make the game exit instead of just ignoring this error
+		//TODO: Also find the other Exceptions like this and do the same It's 01:30 I can't be bothered right now
+		//TODO: Thow an illegal argument exception if name doesn't exist
+		Tile[] tileArray = new Tile[tiles.size()];
+		tileArray = tiles.values().toArray(tileArray);
+		for(int i=0; i<tiles.size(); i++){
+			if(tileArray[i].getId() == id)
+				try {
+					return tileArray[i].getClass().newInstance();
+				} catch (InstantiationException e) {
+					Logger.log(Logger.TYPE_ERROR, e.getStackTrace().toString());
+				} catch (IllegalAccessException e) {
+					Logger.log(Logger.TYPE_ERROR, e.getStackTrace().toString());
+				}
+		}
+		return null;
 	}
 }
