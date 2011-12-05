@@ -51,10 +51,10 @@ public class Player extends Entity {
 	 */
 	
 	public Player(){
-		super(new File("entities/player/"));
+		super(new File("/entities/player/"));
 		this.setAnimation("standing");
-		gun = new Drawable(this.getResource("gun"));
-		bullets = new ArrayList<Entity>();
+	//	gun = new Drawable(this.getResource("gun"));
+		//bullets = new ArrayList<Entity>();
 	}
 	
 	@Override

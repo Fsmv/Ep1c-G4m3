@@ -38,11 +38,11 @@ import com.voracious.ep1cG4m3.utils.Art;
 
 public class Entity extends Drawable {
 	private static final long serialVersionUID = -1211928635812350349L;
-	private HashMap<String, Animation> animations;
-	private HashMap<String, BufferedImage> resources;
-	private String currentAnimation;
-	private Point.Double velocity;
-	private Point.Double acceleration;
+	private HashMap<String, Animation> animations = new HashMap<String, Animation>();
+	private HashMap<String, BufferedImage> resources = new HashMap<String, BufferedImage>();
+	private String currentAnimation = "";
+	private Point.Double velocity = new Point.Double(0, 0);
+	private Point.Double acceleration = new Point.Double(0, 0);
 
 	/**
 	 * Initializes animations list, acceleration and speed. Runs the default constructor of Drawable.
@@ -52,9 +52,6 @@ public class Entity extends Drawable {
 
 	public Entity(){
 		super();
-		velocity = new Point.Double(0, 0);
-		acceleration = new Point.Double(0, 0);
-		currentAnimation = "";
 	}
 
 	/**
@@ -78,9 +75,6 @@ public class Entity extends Drawable {
 	
 	public Entity(Image image){
 		super(image);
-		velocity = new Point.Double(0, 0);
-		acceleration = new Point.Double(0, 0);
-		currentAnimation = "";
 	}
 
 	/**
@@ -209,7 +203,6 @@ public class Entity extends Drawable {
 	 */
 	
 	private void loadAnimations(File resourceFolder){
-		if(resourceFolder.canRead() && resourceFolder.isDirectory()){
 			BufferedImage frames = Art.loadImage(resourceFolder.getPath() + "/" + resourceFolder.getName() + ".png");
 
 			int tempColor = frames.getRGB(0, 0);
@@ -242,18 +235,20 @@ public class Entity extends Drawable {
 					}
 					xx += 4;
 					
-					int numFrames = frames.getRGB(xx+1, 0)-0xff000000;
+					int numFrames = frames.getRGB(xx, 0)-0xff000000;
 					Animation temp = new Animation();
 					for(int i=0; i<numFrames; i++){
-						temp.addFrame(frames.getSubimage((i*width)%frames.getWidth(), height*((i*width)/frames.getWidth()), width, height));
+						System.out.println(i+ " of " + numFrames);
+						System.out.println(frames.getWidth() + "x" + frames.getHeight());
+						System.out.println((i*width)%frames.getWidth() + ", " + ((height*((i*width)/frames.getWidth()))+1));
+						System.out.println(width + "x" + height);
+						System.out.println("----------------");
+						temp.addFrame(frames.getSubimage((i*width)%frames.getWidth(), (height*((i*width)/frames.getWidth()))+1, width, height));
 					}
 					
 					addAnimation(Art.hexToString(hex), temp);
 				}
 			}
-		}else{
-			throw new IllegalArgumentException("resourceFolder is not a directory. Path = " + resourceFolder.getAbsolutePath());
-		}
 	}
 	
 	/**
@@ -263,52 +258,51 @@ public class Entity extends Drawable {
 	 */
 	
 	private void loadResources(File resourceFolder){
-		if(resourceFolder.canRead() && resourceFolder.isDirectory()){
-			if(new File(resourceFolder.getPath(), "rsc.png").exists()){
-				BufferedImage rsc = Art.loadImage(resourceFolder.getPath() + "/rsc.png");
+		System.out.println("loading resources");
+		if(new File(resourceFolder.getPath(), "rsc.png").exists()){
+			BufferedImage rsc = Art.loadImage(resourceFolder.getPath() + "/rsc.png");
 
-				for(int xx=0; xx < rsc.getWidth(); xx++){
-					if(rsc.getRGB(xx, 0) == 0xffffffff && rsc.getRGB(xx, 1) == 0xffffffff)
-						break;
-
-					if(xx%3 == 0){
-						String hex = "";
-						outter:
-							for(int col=0; col<2; col++){
-								for(int row=0; row<2; row++){
-									int color = rsc.getRGB(xx+row, col) - 0xff000000;
-									int a = (color & 0xff0000)/0x10000;
-									int b = (color & 0x00ff00)/0x100;
-									int c = (color & 0x0000ff);
-									if(a == 0){
-										break outter;
-									}else if(b == 0){
-										hex += Integer.toHexString(a);
-										break outter;
-									}else if(c == 0){
-										hex += Integer.toHexString((a*0x100)+b);
-										break outter;
-									}else
-										hex += Integer.toHexString(color);
-								}
+			for(int xx=0; xx < rsc.getWidth(); xx++){
+				if(rsc.getRGB(xx, 0) == 0xffffffff && rsc.getRGB(xx, 1) == 0xffffffff)
+					break;
+				System.out.println("not broken");
+				if(xx%3 == 0){
+					String hex = "";
+					outter:
+						for(int col=0; col<2; col++){
+							for(int row=0; row<2; row++){
+								int color = rsc.getRGB(xx+row, col) - 0xff000000;
+								int a = (color & 0xff0000)/0x10000;
+								int b = (color & 0x00ff00)/0x100;
+								int c = (color & 0x0000ff);
+								if(a == 0){
+									break outter;
+								}else if(b == 0){
+									hex += Integer.toHexString(a);
+									break outter;
+								}else if(c == 0){
+									hex += Integer.toHexString((a*0x100)+b);
+									break outter;
+								}else
+									hex += Integer.toHexString(color);
 							}
-						xx++;
-						String name = Art.hexToString(hex);
-						
-						int colorTop = rsc.getRGB(xx+1, 0) - 0xff000000;
-						int colorBottom = rsc.getRGB(xx+1, 1) - 0xff000000;
+						}
+					xx++;
+					String name = Art.hexToString(hex);
+					System.out.println("name gotten");
 
-						int x = (colorTop & 0xff0000)/0x10000;
-						int y = (colorTop & 0x00ff00)/0x100;
-						int width = (colorBottom & 0xff0000)/0x10000;
-						int height = (colorBottom & 0x00ff00)/0x100;
+					int colorTop = rsc.getRGB(xx+1, 0) - 0xff000000;
+					int colorBottom = rsc.getRGB(xx+1, 1) - 0xff000000;
 
-						addResource(name, rsc.getSubimage(x, y, width, height));
-					}
+					int x = (colorTop & 0xff0000)/0x10000;
+					int y = (colorTop & 0x00ff00)/0x100;
+					int width = (colorBottom & 0xff0000)/0x10000;
+					int height = (colorBottom & 0x00ff00)/0x100;
+					
+					System.out.println(name);
+					addResource(name, rsc.getSubimage(x, y, width, height));
 				}
 			}
-		}else{
-			throw new IllegalArgumentException("resourceFolder is not a directory. Path = " + resourceFolder.getAbsolutePath());
 		}
 	}
 	

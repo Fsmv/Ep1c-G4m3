@@ -46,7 +46,7 @@ public class Preloader extends Screen {
 		g2.drawImage(bg, null, 0, 0);
 	}
 	
-	private int ticks = 0;
+	//private int ticks = 0;
 	
 	@Override
 	public void update(){

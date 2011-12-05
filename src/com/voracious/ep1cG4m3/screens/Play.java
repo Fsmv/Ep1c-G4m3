@@ -2,20 +2,11 @@ package com.voracious.ep1cG4m3.screens;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import javax.swing.Timer;
-
-import com.voracious.ep1cG4m3.entities.Enemy;
 import com.voracious.ep1cG4m3.entities.Player;
 import com.voracious.ep1cG4m3.framework.Screen;
 import com.voracious.ep1cG4m3.framework.Tile;
@@ -37,7 +28,7 @@ public class Play extends Screen{
 	private int entitiesStart[][] = new int[16][20];
 	
 	private ArrayList<Tile> gameTiles = new ArrayList<Tile>();
-	private ArrayList<Enemy> gameEnemies = new ArrayList<Enemy>();
+	//private ArrayList<Enemy> gameEnemies = new ArrayList<Enemy>();
 	
 	private Player player;
 	private Text versionNum;

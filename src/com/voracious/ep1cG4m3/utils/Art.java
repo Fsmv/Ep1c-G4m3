@@ -26,8 +26,12 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 public class Art {
-	public static BufferedImage font = loadImage("/font.png");
-	public static BufferedImage tileTextures = loadImage("/tiles.png");
+	public static BufferedImage font;
+	public static BufferedImage tileTextures;
+	static{
+		font = loadImage("/font.png");
+		tileTextures = loadImage("/tiles.png");
+	}
 
 	private static HashMap<String, BufferedImage> tiles = loadTiles(tileTextures);
 

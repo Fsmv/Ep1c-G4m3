@@ -30,7 +30,10 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import com.voracious.ep1cG4m3.framework.Screen;
+import com.voracious.ep1cG4m3.screens.Instructions;
+import com.voracious.ep1cG4m3.screens.LevelEditor;
 import com.voracious.ep1cG4m3.screens.Menu;
+import com.voracious.ep1cG4m3.screens.Play;
 import com.voracious.ep1cG4m3.screens.Preloader;
 import com.voracious.ep1cG4m3.utils.Logger;
 import com.voracious.ep1cG4m3.utils.ScreenResultListener;
@@ -48,7 +51,7 @@ public class Main extends JPanel implements ScreenResultListener, ActionListener
 	private Timer timer;
 	
 	private int currentScreen = -1;
-	private Screen screens[] = {new Preloader(this, 0), new Menu(this, 1)};
+	private Screen screens[] = {new Preloader(this, 0), new Menu(this, 1), new Play(this, 2), new Instructions(this, 3), new LevelEditor(this, 4)};
 	
 	public static void main(String[] args){
 		new Main();

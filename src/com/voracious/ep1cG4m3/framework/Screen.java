@@ -49,6 +49,7 @@ public abstract class Screen extends Canvas {
 	
 	public Screen(ScreenResultListener listener, int id){
 		setListener(listener);
+		setId(id);
 		setBounds(0, 0, 640, 512);
 	}
 	

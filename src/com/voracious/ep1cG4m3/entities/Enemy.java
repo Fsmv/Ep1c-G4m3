@@ -19,7 +19,14 @@
 
 package com.voracious.ep1cG4m3.entities;
 
+import java.io.File;
+
 import com.voracious.ep1cG4m3.framework.Entity;
 
 public class Enemy extends Entity {
+	public Enemy(File resourceFolder) {
+		super(resourceFolder);
+	}
+
+	private static final long serialVersionUID = -3293810299292669264L;
 }
