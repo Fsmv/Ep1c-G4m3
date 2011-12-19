@@ -39,107 +39,125 @@ import com.voracious.ep1cG4m3.utils.Logger;
 import com.voracious.ep1cG4m3.utils.ScreenResultListener;
 
 /**
- * This is the main class that coordinates all of the screens and owns the window.
+ * This is the main class that coordinates all of the screens and owns the
+ * window.
  * 
  * @author Voracious Softworks
  */
 
-public class Main extends JPanel implements ScreenResultListener, ActionListener{
-	private static final long serialVersionUID = 9198379891709086094L;
+public class Main extends JPanel implements ScreenResultListener, ActionListener {
+    private static final long serialVersionUID = 9198379891709086094L;
 
-	private JPanel panel;
-	private Timer timer;
-	
-	private int currentScreen = -1;
-	private Screen screens[] = {new Preloader(this, 0), new Menu(this, 1), new Play(this, 2), new Instructions(this, 3), new LevelEditor(this, 4)};
-	
-	public static void main(String[] args){
-		new Main();
-	}
-	
-	public Main(){
-		JFrame frame = new JFrame("Ep1c G4m3");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		panel = (JPanel) frame.getContentPane();
-		panel.setPreferredSize(new Dimension(640, 512));
-		CardLayout layout = new CardLayout();
-		panel.setLayout(layout);
-		panel.setOpaque(false);
-		Logger.setLogFile(new File("log.txt"));
-		
-		for(int i=0; i<screens.length; i++)
-			panel.add(screens[i], Integer.toString(i));
-		
-		frame.validate();
-		frame.pack();
-		frame.setResizable(false);
-		frame.setVisible(true);
-		
-		switchScreen(0);
-		setTimer(new Timer(1000/36, this));
-		timer.start();
-	}
-	
-	/**
-	 * Display a different screen
-	 * 
-	 * @param id the id of the screen to switch to
-	 */
-	
-	public void switchScreen(int id){
-		CardLayout cl = (CardLayout)panel.getLayout();
-		if(currentScreen >= 0 && currentScreen < screens.length){
-			screens[currentScreen].stop();
-		}
-		
-		if(id >= 0 && id < screens.length){
-			currentScreen = id;
-			cl.show(panel, Integer.toString(currentScreen));
-			screens[currentScreen].start();
-		}else{
-			System.out.println("ERROR: Screen (id = " + id + ") not found. At main.switchScreen(id).");
-		}
+    private JPanel panel;
+    private Timer timer;
+
+    private int currentScreen = -1;
+    private Screen screens[] = {new Preloader(this, 0), new Menu(this, 1), new Play(this, 2), new Instructions(this, 3), new LevelEditor(this, 4) };
+
+    public static void main(String[] args) {
+	new Main();
+    }
+
+    public Main() {
+	JFrame frame = new JFrame("Ep1c G4m3");
+	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+	panel = (JPanel) frame.getContentPane();
+	panel.setPreferredSize(new Dimension(640, 512));
+	CardLayout layout = new CardLayout();
+	panel.setLayout(layout);
+	panel.setOpaque(false);
+	Logger.setLogFile(new File("log.txt"));
+
+	for (int i = 0; i < screens.length; i++)
+	    panel.add(screens[i], Integer.toString(i));
+
+	frame.validate();
+	frame.pack();
+	frame.setResizable(false);
+	frame.setVisible(true);
+
+	switchScreen(0);
+	setTimer(new Timer(0, this));
+	timer.start();
+    }
+
+    /**
+     * Display a different screen
+     * 
+     * @param id
+     *            the id of the screen to switch to
+     */
+
+    public void switchScreen(int id) {
+	CardLayout cl = (CardLayout) panel.getLayout();
+	if (currentScreen >= 0 && currentScreen < screens.length) {
+	    screens[currentScreen].stop();
 	}
 
-	@Override
-	public void onScreenResult(int id, int resultCode) {
-		switch(id){
-		case 0:
-			if(resultCode == Preloader.RESULT_OK)
-				switchScreen(1);
-			break;
-		case 1:
-			if(resultCode == Menu.RESULT_PLAY)
-				switchScreen(2);
-			else if(resultCode == Menu.RESULT_INSTRUCTIONS)
-				switchScreen(3);
-			else if(resultCode == Menu.RESULT_LEVEL_EDITOR)
-				switchScreen(4);
-		}
+	if (id >= 0 && id < screens.length) {
+	    currentScreen = id;
+	    cl.show(panel, Integer.toString(currentScreen));
+	    screens[currentScreen].start();
+	} else {
+	    throw new IllegalArgumentException("ERROR: Screen (id = " + id + ") not found. At main.switchScreen(id).");
 	}
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(currentScreen >= 0 && currentScreen < screens.length){
-			screens[currentScreen].render();
-			screens[currentScreen].update();
-		}
+    @Override
+    public void onScreenResult(int id, int resultCode) {
+	switch (id) {
+	case 0:
+	    if (resultCode == Preloader.RESULT_OK)
+		switchScreen(1);
+	    break;
+	case 1:
+	    if (resultCode == Menu.RESULT_PLAY)
+		switchScreen(2);
+	    else if (resultCode == Menu.RESULT_INSTRUCTIONS)
+		switchScreen(3);
+	    else if (resultCode == Menu.RESULT_LEVEL_EDITOR)
+		switchScreen(4);
 	}
+    }
 
-	/**
-	 * @param timer the timer to set
-	 */
+    long lastTime;
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+	lastTime = System.currentTimeMillis();
 	
-	public void setTimer(Timer timer) {
-		this.timer = timer;
+	if (currentScreen >= 0 && currentScreen < screens.length) {
+	    screens[currentScreen].render();
+	    screens[currentScreen].update();
+	}
+	
+	try {
+	    Thread.sleep(10);
+	} catch (InterruptedException e1) {
+	    // TODO Auto-generated catch block
+	    e1.printStackTrace();
 	}
 
-	/**
-	 * @return the timer
-	 */
-	
-	public Timer getTimer() {
-		return timer;
-	}
+	long mspf = System.currentTimeMillis() - lastTime; //milliseconds per frame
+	int fps = (int) (1.0 / (mspf / 1000.0));
+	System.out.println(fps + " fps");
+    }
+
+    /**
+     * @param timer
+     *            the timer to set
+     */
+
+    public void setTimer(Timer timer) {
+	this.timer = timer;
+    }
+
+    /**
+     * @return the timer
+     */
+
+    public Timer getTimer() {
+	return timer;
+    }
 }
