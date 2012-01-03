@@ -27,6 +27,7 @@ public class Play extends Screen {
 
     public static int currentLevel = 1;
     public static int currentWorld = 1;
+    private static int fps = 0;
 
     private Level level;
 
@@ -51,6 +52,12 @@ public class Play extends Screen {
 
 	    public void keyReleased(KeyEvent e) {
 		player.keyReleased(e);
+		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+		    if (scroll)
+			scroll = false;
+		    else
+			scroll = true;
+		}
 	    }
 	});
 
@@ -71,30 +78,93 @@ public class Play extends Screen {
 
     int x = 0;
     int y = 0;
-    
+    boolean scroll = false;
+
     @Override
     public void update() {
 	player.update(System.currentTimeMillis());
+	if (scroll) {
+	    x++;
+	    y++;
+	    int xh = (99 * 16) - viewWindow.width;
+	    int yh = (49 * 16) - viewWindow.height;
+	    int xx = (int) ((xh / 2) * Math.cos(((2 * Math.PI) / xh) * x) + xh / 2);
+	    int yy = (int) ((yh / 2) * Math.cos(((2 * Math.PI) / yh) * y) + yh / 2);
+	    if (xx < 0)
+		xx = 0;
+	    if (yy < 0)
+		yy = 0;
+	    if (yy > yh)
+		yy = yh;
+	    if (xx > xh)
+		xx = xh;
+	    viewWindow.setLocation(xx, yy);
+	}
     }
+
+    int[] afps = new int[250];
+    int fpsi = 0;
 
     @Override
     public void draw(Graphics g) {
 	Tile[][] tiles = level.getTiles();
 	int ri = 0, ci = 0; //Row iterator, column iterator
-	for(int r = viewWindow.x/Tile.tileSize; r<(viewWindow.width + viewWindow.x)/Tile.tileSize; r++){
-	    for(int c = viewWindow.y/Tile.tileSize; c<(viewWindow.height + viewWindow.y)/Tile.tileSize; c++){
-		if(tiles[r][c] != null){
-		    if(!tiles[r][c].getLocation().equals(new Point(ri*Tile.tileSize, ci*Tile.tileSize)))
-		    	tiles[r][c].setLocation(new Point(ri*Tile.tileSize, ci*Tile.tileSize));
+	int a = viewWindow.x / Tile.tileSize;
+	if (a < 0)
+	    a = 0;
+	
+	int b = (viewWindow.width + viewWindow.x) / Tile.tileSize + 1;
+	if (b >= tiles.length)
+	    b = tiles.length - 1;
+
+	int d = viewWindow.y / Tile.tileSize;
+	if (d < 0)
+	    d = 0;
+	int e = (viewWindow.height + viewWindow.y) / Tile.tileSize + 1;
+	if (e >= tiles[0].length)
+	    e = tiles[0].length - 1;
+
+	for (int r = a; r < b; r++) {
+	    for (int c = d; c < e; c++) {
+		if (tiles[r][c] != null) {
+		    int xx = ri * Tile.tileSize - viewWindow.x % Tile.tileSize;
+		    int yy = ci * Tile.tileSize - viewWindow.y % Tile.tileSize;
+		    if (!tiles[r][c].getLocation().equals(new Point(xx, yy)))
+			tiles[r][c].setLocation(new Point(xx, yy));
+		    long now = System.currentTimeMillis();
 		    tiles[r][c].paintIcon(this, g);
+		    if(System.currentTimeMillis() - now >= 10){
+			System.out.println(System.currentTimeMillis() - now);
+			System.out.println(r + ", " + c);
+		    }
 		}
 		ci++;
 	    }
 	    ri++;
 	    ci = 0;
 	}
-	
+
 	player.paintIcon(this, g);
-	versionNum.paintIcon(this, g);
+	//versionNum.paintIcon(this, g);
+	new Text(fps + " fps", new Point(50, 50), 20, 1, Color.BLACK).paintIcon(this, g);
+	afps[fpsi] = fps;
+	fpsi++;
+	if (fpsi >= 250) {
+	    fpsi = 0;
+	}
+	int tot = 0;
+	int ii = 0;
+	for (int i = 0; i < afps.length; i++) {
+	    if (afps[i] == 0)
+		break;
+	    tot += afps[i];
+	    ii++;
+	}
+
+	new Text("Average fps: " + tot / ii, new Point(50, 80), 20, 1, Color.BLACK).paintIcon(this, g);
+    }
+
+    public static void sendFps(int fps) {
+	Play.fps = fps;
     }
 }

@@ -141,7 +141,7 @@ public class Main extends JPanel implements ScreenResultListener, ActionListener
 
 	long mspf = System.currentTimeMillis() - lastTime; //milliseconds per frame
 	int fps = (int) (1.0 / (mspf / 1000.0));
-	System.out.println(fps + " fps");
+	Play.sendFps(fps);
     }
 
     /**
