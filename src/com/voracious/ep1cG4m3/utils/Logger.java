@@ -10,28 +10,28 @@ public class Logger {
 	public static final int TYPE_ERROR = 1;
 	public static final int TYPE_WARNING = 2;
 	public static final int TYPE_DEBUG = 3;
-	
+
 	private static File logfile;
 	private static int loglevel;
 	private static BufferedWriter log;
 
-	public static void log(int type, String message){
-		try{
-			if(log == null){
+	public static void log(int type, String message) {
+		try {
+			if (log == null) {
 				if (getLogFile() == null) {
 					throw new IOException("ERROR: logfile (" + getLogFile().toString() + ") is null");
-				}else{
+				} else {
 					if (!getLogFile().exists()) {
 						FileWriter fstream = new FileWriter(logfile);
 						log = new BufferedWriter(fstream);
 						log.write("");
-					}else{
+					} else {
 						if (!getLogFile().isFile()) {
 							throw new IOException("ERROR: logfile (" + getLogFile().toString() + ") is a directory");
-						}else{
+						} else {
 							if (!getLogFile().canWrite()) {
 								throw new IOException("ERROR: Logile (" + getLogFile().toString() + ") not writable");
-							}else{
+							} else {
 								FileWriter fstream = new FileWriter(logfile);
 								log = new BufferedWriter(fstream);
 							}
@@ -39,10 +39,10 @@ public class Logger {
 					}
 				}
 			}
-			
-			if(type < getLogLevel()){
+
+			if (type < getLogLevel()) {
 				String prefix = "";
-				switch(type){
+				switch (type) {
 				case TYPE_INFO:
 					prefix += "INFO: ";
 					break;
@@ -56,12 +56,12 @@ public class Logger {
 					prefix += "DEBUG: ";
 					break;
 				}
-				
+
 				log.append(prefix + message);
 			}
-		}catch(IOException e){
+		} catch (IOException e) {
 			System.out.println(e.getMessage());
-			if(log != null){
+			if (log != null) {
 				try {
 					log.close();
 				} catch (IOException e1) {
@@ -70,7 +70,7 @@ public class Logger {
 			}
 		}
 	}
-	
+
 	/**
 	 * @return the log file
 	 */
@@ -84,14 +84,14 @@ public class Logger {
 	public static void setLogFile(File logfile) {
 		Logger.logfile = logfile;
 	}
-	
+
 	/**
 	 * @return the log level
 	 */
 	public static int getLogLevel() {
 		return loglevel;
 	}
-	
+
 	/**
 	 * @param loglevel the log level to set
 	 */
@@ -99,10 +99,10 @@ public class Logger {
 		Logger.loglevel = loglevel;
 		log(TYPE_INFO, "Log level is " + loglevel);
 	}
-	
-	public static void close(){
+
+	public static void close() {
 		log(TYPE_DEBUG, "Closing log file");
-		if(log != null){
+		if (log != null) {
 			try {
 				log.close();
 			} catch (IOException e1) {

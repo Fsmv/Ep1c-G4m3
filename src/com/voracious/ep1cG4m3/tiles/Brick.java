@@ -22,12 +22,12 @@ package com.voracious.ep1cG4m3.tiles;
 import com.voracious.ep1cG4m3.framework.Tile;
 
 public class Brick extends Tile {
-    private static final long serialVersionUID = 7895713623804232493L;
-    public static final int id = 1;
+	private static final long serialVersionUID = 7895713623804232493L;
+	public static final String name = "brick";
+	public static final int id = 1;
 
-    public Brick() {
-	super(id, "brick");
-	setTangible(true);
-	setName("brick");
-    }
+	public Brick() {
+		super(Brick.name, Brick.id);
+		setTangible(true);
+	}
 }

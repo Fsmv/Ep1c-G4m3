@@ -34,7 +34,7 @@ import com.voracious.ep1cG4m3.utils.Text;
 public class LevelEditor extends Screen {
 	private static final long serialVersionUID = -8248235057305491242L;
 	private Text title;
-	
+
 	public LevelEditor(ScreenResultListener listener, int id) {
 		super(listener, id);
 	}
@@ -45,7 +45,7 @@ public class LevelEditor extends Screen {
 	}
 
 	@Override
-	public void draw(Graphics g){
+	public void draw(Graphics g) {
 		title.paintIcon(this, g);
 	}
 }

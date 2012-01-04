@@ -20,6 +20,7 @@
 package com.voracious.ep1cG4m3.screens;
 
 import java.awt.Graphics;
+import java.awt.Point;
 
 import com.voracious.ep1cG4m3.framework.Screen;
 import com.voracious.ep1cG4m3.utils.ScreenResultListener;
@@ -34,19 +35,27 @@ import com.voracious.ep1cG4m3.utils.Text;
 public class Instructions extends Screen {
 	private static final long serialVersionUID = 6891345264117973033L;
 	private Text title;
-	
+	private Text instructions;
+
 	public Instructions(ScreenResultListener listener, int id) {
 		super(listener, id);
 	}
-	
+
 	@Override
-	public void start(){
-		title = new Text("Instructions screen");
+	public void start() {
+		title = new Text("Instructions:", new Point(5, 5), 20);
+		instructions = new Text(
+				"* Use WASD to move the player (a two colored rectangle\n  for now)\n" +
+						"* Press spacebar to make the view window move around\n" +
+						"* Press Z to randomly add a tile\n" +
+						"* Press X to randomly remove a tile\n" +
+						"* Press C to toggle between the level map and a\n  full screen of tiles",
+				new Point(5, 30));
 	}
-	
-	
+
 	@Override
 	public void draw(Graphics g) {
 		title.paintIcon(this, g);
+		instructions.paintIcon(this, g);
 	}
 }

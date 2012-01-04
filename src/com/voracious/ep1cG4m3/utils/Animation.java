@@ -31,117 +31,117 @@ import java.util.ArrayList;
 
 public class Animation {
 	public static final int FPS = 32;
-	
+
 	private int currentFrame;
 	private ArrayList<BufferedImage> frames;
 	private long frameTime;
 	private long duration;
-	
+
 	/**
 	 * Default Constructor, allows creating it then setting the values later.
 	 */
-	
-	public Animation(){
+
+	public Animation() {
 		frames = new ArrayList<BufferedImage>();
 		currentFrame = 0;
 		start();
 	}
-	
+
 	/**
 	 * Initialize the class with the frames already in an ArrayList.
 	 * 
 	 * @param frames List of images to be used as frames
 	 */
-	
-	public Animation(ArrayList<BufferedImage> frames){
+
+	public Animation(ArrayList<BufferedImage> frames) {
 		this.frames = frames;
 		currentFrame = 0;
-		duration = (long) ((1.0/(FPS*1000))*frames.size());
+		duration = (long) ((1.0 / (FPS * 1000)) * frames.size());
 		start();
 	}
-	
+
 	/**
 	 * Starts animation over from the beginning
 	 */
-	
-	public synchronized void start(){
+
+	public synchronized void start() {
 		frameTime = 0;
 		currentFrame = 0;
 	}
-	
+
 	/**
 	 * Changes the animation's frame if enough time has passed
 	 * 
 	 * @param dt delta time, time since last update in ms
 	 */
-	
-	public synchronized void update(long dt){
-		if(frames.size() > 1) {
+
+	public synchronized void update(long dt) {
+		if (frames.size() > 1) {
 			frameTime += dt;
-			
-			if(frameTime >= duration){
-				frameTime = frameTime%duration;
+
+			if (frameTime >= duration) {
+				frameTime = frameTime % duration;
 				currentFrame = 0;
 			}
-			
-			while(frameTime > currentFrame*((double)duration/frames.size()))
+
+			while (frameTime > currentFrame * ((double) duration / frames.size()))
 				currentFrame++;
 		}
 	}
-	
-	public synchronized BufferedImage getImage(){
+
+	public synchronized BufferedImage getImage() {
 		return frames.get(currentFrame);
 	}
-	
+
 	/**
 	 * Supplies the next frame number.
 	 * 
 	 * @return The frame number that will be returned next
 	 */
-	
-	public synchronized int getCurrentFrame(){
+
+	public synchronized int getCurrentFrame() {
 		return currentFrame;
 	}
-	
+
 	/**
 	 * Supplies the number of frames in the animation.
 	 * 
 	 * @return Total number of frames in the animation
 	 */
-	
-	public int getNumFrames(){
+
+	public int getNumFrames() {
 		return frames.size();
 	}
-	
+
 	/**
 	 * Supplies a specific frame.
 	 * 
 	 * @param frame Frame number that should be returned
 	 * @return The requested frame image
 	 */
-	
-	public BufferedImage getFrame(int frame){
+
+	public BufferedImage getFrame(int frame) {
 		return frames.get(frame);
 	}
-	
+
 	/**
 	 * Appends a frame to the list
 	 * 
 	 * @param frame frame to append
 	 */
-	
-	public void addFrame(BufferedImage frame){
+
+	public void addFrame(BufferedImage frame) {
 		frames.add(frame);
 	}
-	
+
 	/**
 	 * Changes the current frame to the supplied value.
 	 * 
 	 * @param frame frame to switch to
 	 */
-	
-	public synchronized void gotoFrame(int frame){
-		frameTime = frameTime%duration;
+
+	public synchronized void gotoFrame(int frame) {
+		frameTime = frameTime % duration;
 		currentFrame = frame;
 	}
 }

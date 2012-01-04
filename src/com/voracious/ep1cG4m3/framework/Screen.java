@@ -35,103 +35,101 @@ import com.voracious.ep1cG4m3.utils.ScreenResultListener;
 
 public abstract class Screen extends Canvas {
 	private static final long serialVersionUID = 2222464333625474339L;
-	
+
 	private BufferStrategy buffer;
 	private ScreenResultListener listener;
 	private int id;
-	
+
 	/**
 	 * Creates a new Screen object
 	 * 
 	 * @param listener listener this screen will post messages to
 	 * @param id the screens id (for switching purposes)
 	 */
-	
-	public Screen(ScreenResultListener listener, int id){
+
+	public Screen(ScreenResultListener listener, int id) {
 		setListener(listener);
 		setId(id);
 		setBounds(0, 0, 640, 512);
 	}
-	
+
 	@Override
-	public void addNotify(){
+	public void addNotify() {
 		super.addNotify();
-		
+
 		this.createBufferStrategy(2);
 		buffer = getBufferStrategy();
 	}
-	
+
 	/**
-	 * Called when the screen is being switched to. Each screen can initialize GUI elements and listeners here.
-	 * <br />Call super() when overriding.
+	 * Called when the screen is being switched to. Each screen can initialize GUI elements and listeners here. <br />
+	 * Call super() when overriding.
 	 */
-	
-	public void start(){
+
+	public void start() {
 		setVisible(true);
 		setBackground(Color.WHITE);
 	}
-	
+
 	/**
-	 * Called when switching to another screen. Each screen MUST remove its listeners here.
-	 * <br />Call super() when overriding.
+	 * Called when switching to another screen. Each screen MUST remove its listeners here. <br />
+	 * Call super() when overriding.
 	 */
-	
-	public void stop(){
+
+	public void stop() {
 		setVisible(false);
 		buffer.dispose();
 	}
-	
+
 	/**
 	 * Implement this method to draw graphics.
 	 * 
 	 * @param g Graphics object that will be displayed
 	 */
-	
+
 	public abstract void draw(Graphics g);
-	
+
 	/**
 	 * Called immediately after rendering completes. Should be used to change the graphics that will be drawn next frame.
 	 */
-	
-	public void update(){
+
+	public void update() {
 		//Nothing
 	}
-	
+
 	/**
-	 * This message should not be overridden.
-	 * 
-	 * Renders all of the graphics.
+	 * This message should not be overridden. Renders all of the graphics.
 	 */
-	
-	public void render(){
+
+	public void render() {
 		Graphics g = buffer.getDrawGraphics();
 		g.clearRect(0, 0, 640, 512);
-		
+
 		draw(g);
-		
+
 		g.dispose();
 		buffer.show();
 		Toolkit.getDefaultToolkit().sync();
 	}
-	
+
 	/**
 	 * The game object that called the screen. Needed to call onActivityResult.
 	 * 
 	 * @return the class that the screen will return a result to
 	 */
-	
-	public ScreenResultListener getListener(){
+
+	public ScreenResultListener getListener() {
 		return listener;
 	}
-	
+
 	/**
 	 * A method to call when GUI elements are interacted with.
 	 * 
 	 * @param id id for the GUI element
 	 * @param type Action type
 	 */
-	
-	protected void dispatchResult(int type){
+
+	protected void dispatchResult(int type) {
 		getListener().onScreenResult(getId(), type);
 	}
 
@@ -140,7 +138,7 @@ public abstract class Screen extends Canvas {
 	 * 
 	 * @param listener the listener change to
 	 */
-	
+
 	public void setListener(ScreenResultListener listener) {
 		this.listener = listener;
 	}
@@ -150,7 +148,7 @@ public abstract class Screen extends Canvas {
 	 * 
 	 * @param id the id to set
 	 */
-	
+
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -160,7 +158,7 @@ public abstract class Screen extends Canvas {
 	 * 
 	 * @return the id
 	 */
-	
+
 	public int getId() {
 		return id;
 	}

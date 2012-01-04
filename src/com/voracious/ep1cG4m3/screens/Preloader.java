@@ -30,28 +30,29 @@ import com.voracious.ep1cG4m3.utils.ScreenResultListener;
 public class Preloader extends Screen {
 
 	public static int RESULT_OK = 0;
-	
+
 	private static final long serialVersionUID = -2293651813069405885L;
 	private BufferedImage bg;
-	
+
 	public Preloader(ScreenResultListener listener, int id) {
 		super(listener, id);
 	}
-	
+
 	@Override
 	public void draw(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		bg = Art.loadImage("/loadImage.png");
-		
+
 		g2.drawImage(bg, null, 0, 0);
 	}
-	
+
 	//private int ticks = 0;
-	
+
 	@Override
-	public void update(){
-		/*ticks++;
-		if(ticks == 72)*/
-			dispatchResult(Preloader.RESULT_OK);
+	public void update() {
+		/*
+		 * ticks++; if(ticks == 72)
+		 */
+		dispatchResult(Preloader.RESULT_OK);
 	}
 }

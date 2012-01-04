@@ -37,14 +37,14 @@ import javax.swing.ImageIcon;
 
 public class Drawable extends ImageIcon {
 	private static final long serialVersionUID = 5748722120305601075L;
-	
+
 	private Point location = new Point(0, 0);
-	
+
 	public Drawable() {
 		super();
 	}
-	
-	public Drawable(Image i){
+
+	public Drawable(Image i) {
 		super(i);
 	}
 
@@ -53,36 +53,36 @@ public class Drawable extends ImageIcon {
 		setLocation(location);
 	}
 
-	public void setLocation(Point location){
+	public void setLocation(Point location) {
 		this.location = location;
 	}
-	
-	public Point getLocation(){
+
+	public Point getLocation() {
 		return location;
 	}
-	
+
 	/**
 	 * Paints the icon using the stored location
 	 * 
 	 * @param c component to draw on
 	 * @param g graphics to draw on
 	 */
-	
-	public void paintIcon(Component c, Graphics g){
+
+	public void paintIcon(Component c, Graphics g) {
 		Point loc = getLocation();
-		super.paintIcon(c, g, (int)loc.getX(), (int)loc.getY());
+		super.paintIcon(c, g, (int) loc.getX(), (int) loc.getY());
 	}
-	
+
 	/**
 	 * @return rectangle representing the object
 	 */
-	
-	public Rectangle getBounds(){
+
+	public Rectangle getBounds() {
 		Point loc = getLocation();
 		BufferedImage img = (BufferedImage) getImage();
-		return new Rectangle((int)loc.getX(), (int)loc.getY(), img.getWidth(), img.getHeight());
+		return new Rectangle((int) loc.getX(), (int) loc.getY(), img.getWidth(), img.getHeight());
 	}
-	
+
 	/**
 	 * Rotates the image by [rads] radians
 	 * 
@@ -90,7 +90,7 @@ public class Drawable extends ImageIcon {
 	 * @param axis point to rotate around
 	 */
 
-	public void rotate(double theta, Point.Double axis){
+	public void rotate(double theta, Point.Double axis) {
 		BufferedImage currImg = (BufferedImage) getImage();
 		BufferedImage newImg = new BufferedImage(currImg.getWidth(), currImg.getHeight(), currImg.getType());
 		Graphics2D g2 = (Graphics2D) newImg.getGraphics();

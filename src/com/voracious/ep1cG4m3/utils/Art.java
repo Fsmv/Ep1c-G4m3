@@ -26,117 +26,108 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 public class Art {
-    public static BufferedImage font;
-    public static BufferedImage tileTextures;
-    private static HashMap<String, BufferedImage> tiles;
-    static {
-	font = loadImage("/font.png");
-	tileTextures = loadImage("/tiles.png");
-	tiles = loadTiles(tileTextures);
-    }
-
-    /**
-     * Loads a specified image
-     * 
-     * @param fileName
-     *            the image file to load
-     * @return the loaded image. Null if an error was encountered
-     */
-    public static BufferedImage loadImage(String fileName) {
-	try {
-	    return ImageIO.read(Art.class.getResource(fileName));
-	} catch (IOException e) {
-	    Logger.log(Logger.TYPE_ERROR, e.getStackTrace().toString());
-	    return null;
+	public static BufferedImage font;
+	public static BufferedImage tileTextures;
+	private static HashMap<String, BufferedImage> tiles;
+	static {
+		font = loadImage("/font.png");
+		tileTextures = loadImage("/tiles.png");
+		tiles = loadTiles(tileTextures);
 	}
-    }
 
-    /**
-     * Cuts the tile images out of the texture file and stores them in a HashMap
-     * with their names as keys.
-     * 
-     * @param tileTextures
-     *            The texture file to cut up
-     * @return the HashMap with all of the images stored by name
-     */
-
-    /*
-     * This method has some code that is nearly the same as some code in the
-     * Entity class. The similar code is in the methods loadResources and
-     * loadAnimations
-     */
-    private static HashMap<String, BufferedImage> loadTiles(BufferedImage tileTextures) {
-	HashMap<String, BufferedImage> result = new HashMap<String, BufferedImage>();
-
-	int color = tileTextures.getRGB(0, 0);
-	int sideLen = (color & 0xff0000) / 0x10000;
-
-	for (int xx = 1; xx < tileTextures.getWidth(); xx++) {
-	    color = tileTextures.getRGB(xx, 0);
-	    if (color == 0xffffffff)
-		break;
-
-	    if (xx % 4 == 1) {
-		String hex = "";
-		for (int i = 0; i < 4; i++) {
-		    color = tileTextures.getRGB(xx + i, 0) & 0x00ffffff;
-		    int a = (color & 0xff0000) / 0x10000;
-		    int b = (color & 0x00ff00) / 0x100;
-		    int c = (color & 0x0000ff);
-
-		    if (a == 0) {
-			break;
-		    } else if (b == 0) {
-			hex += Integer.toHexString(a);
-			break;
-		    } else if (c == 0) {
-			hex += Integer.toHexString((a * 0x100) + b);
-			break;
-		    } else
-			hex += Integer.toHexString(color);
+	/**
+	 * Loads a specified image
+	 * 
+	 * @param fileName the image file to load
+	 * @return the loaded image. Null if an error was encountered
+	 */
+	public static BufferedImage loadImage(String fileName) {
+		try {
+			return ImageIO.read(Art.class.getResource(fileName));
+		} catch (IOException e) {
+			Logger.log(Logger.TYPE_ERROR, e.getStackTrace().toString());
+			return null;
 		}
-		result.put(hexToString(hex), tileTextures.getSubimage(((xx / 4) * sideLen) % tileTextures.getWidth(), sideLen * (((xx / 4) * sideLen) / tileTextures.getWidth()) + 1, sideLen, sideLen));
-		xx += 4;
-	    }
 	}
 
-	return result;
-    }
+	/**
+	 * Cuts the tile images out of the texture file and stores them in a HashMap with their names as keys.
+	 * 
+	 * @param tileTextures The texture file to cut up
+	 * @return the HashMap with all of the images stored by name
+	 */
 
-    /**
-     * Turns a hex number represented into as a string into a string of ascii
-     * chars
-     * 
-     * @param hex
-     *            value to translate
-     * @return translated hex
-     */
+	/*
+	 * This method has some code that is nearly the same as some code in the Entity class. The similar code is in the methods loadResources and loadAnimations
+	 */
+	private static HashMap<String, BufferedImage> loadTiles(BufferedImage tileTextures) {
+		HashMap<String, BufferedImage> result = new HashMap<String, BufferedImage>();
 
-    public static String hexToString(String hex) {
-	String result = "";
-	for (int i = 0; i < hex.length() - 1; i += 2) {
-	    String substr = hex.substring(i, (i + 2));
-	    int decimal = Integer.parseInt(substr, 16);
-	    result += (char) decimal;
+		int color = tileTextures.getRGB(0, 0);
+		int sideLen = (color & 0xff0000) / 0x10000;
+
+		for (int xx = 1; xx < tileTextures.getWidth(); xx++) {
+			color = tileTextures.getRGB(xx, 0);
+			if (color == 0xffffffff)
+				break;
+
+			if (xx % 4 == 1) {
+				String hex = "";
+				for (int i = 0; i < 4; i++) {
+					color = tileTextures.getRGB(xx + i, 0) & 0x00ffffff;
+					int a = (color & 0xff0000) / 0x10000;
+					int b = (color & 0x00ff00) / 0x100;
+					int c = (color & 0x0000ff);
+
+					if (a == 0) {
+						break;
+					} else if (b == 0) {
+						hex += Integer.toHexString(a);
+						break;
+					} else if (c == 0) {
+						hex += Integer.toHexString((a * 0x100) + b);
+						break;
+					} else
+						hex += Integer.toHexString(color);
+				}
+				result.put(hexToString(hex), tileTextures.getSubimage(((xx / 4) * sideLen) % tileTextures.getWidth(), sideLen * (((xx / 4) * sideLen) / tileTextures.getWidth()) + 1, sideLen, sideLen));
+				xx += 4;
+			}
+		}
+
+		return result;
 	}
 
-	return result;
-    }
+	/**
+	 * Turns a hex number represented into as a string into a string of ascii chars
+	 * 
+	 * @param hex value to translate
+	 * @return translated hex
+	 */
 
-    /**
-     * @param name
-     *            The name of the tile resource to return
-     * @return The tile image with the defined name
-     * @throws IllegalArgumentException
-     *             When the name requested is not defined in the texture file
-     */
-    public static BufferedImage getTileImage(String name) throws IllegalArgumentException {
-	if (tiles.containsKey(name)) {
-	    return tiles.get(name);
-	} else if (name == "air") {
-	    return null;
-	} else {
-	    throw new IllegalArgumentException("No tile image with the name: \"" + name + "\" exists.");
+	public static String hexToString(String hex) {
+		String result = "";
+		for (int i = 0; i < hex.length() - 1; i += 2) {
+			String substr = hex.substring(i, (i + 2));
+			int decimal = Integer.parseInt(substr, 16);
+			result += (char) decimal;
+		}
+
+		return result;
 	}
-    }
+
+	/**
+	 * @param name The name of the tile resource to return
+	 * @return The tile image with the defined name
+	 * @throws IllegalArgumentException When the name requested is not defined in the texture file
+	 */
+	public static BufferedImage getTileImage(String name) throws IllegalArgumentException {
+		if (tiles.containsKey(name)) {
+			return tiles.get(name);
+		} else if (name == "air") {
+			return null;
+		} else {
+			throw new IllegalArgumentException("No tile image with the name: \"" + name + "\" exists.");
+		}
+	}
 }
