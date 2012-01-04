@@ -192,7 +192,7 @@ public class Tile extends Drawable {
 		// TODO: Also find the other Exceptions like this and do the same It's 01:30 I can't be bothered right now
 		if (id > 0) {
 			try {
-				return tiles.get(tileIds.get(new Integer(id))).newInstance();
+				return tiles.get(tileIds.get(Integer.valueOf(id))).newInstance();
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {

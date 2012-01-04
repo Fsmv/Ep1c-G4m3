@@ -29,7 +29,7 @@ import com.voracious.ep1cG4m3.utils.ScreenResultListener;
 
 public class Preloader extends Screen {
 
-	public static int RESULT_OK = 0;
+	public static final int RESULT_OK = 0;
 
 	private static final long serialVersionUID = -2293651813069405885L;
 	private BufferedImage bg;

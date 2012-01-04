@@ -124,7 +124,7 @@ public class Art {
 	public static BufferedImage getTileImage(String name) throws IllegalArgumentException {
 		if (tiles.containsKey(name)) {
 			return tiles.get(name);
-		} else if (name == "air") {
+		} else if (name.equals("air")) {
 			return null;
 		} else {
 			throw new IllegalArgumentException("No tile image with the name: \"" + name + "\" exists.");
