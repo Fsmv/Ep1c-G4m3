@@ -21,6 +21,12 @@ package com.voracious.ep1cG4m3.tiles;
 
 import com.voracious.ep1cG4m3.framework.Tile;
 
+/**
+ * Basic tangible tile
+ * I'm not sure if this will make it into the completed game it's mostly here for testing
+ * 
+ * @author Voracious Softworks
+ */
 public class Brick extends Tile {
 	private static final long serialVersionUID = 7895713623804232493L;
 	public static final String name = "brick";

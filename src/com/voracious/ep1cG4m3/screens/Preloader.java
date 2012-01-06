@@ -27,6 +27,14 @@ import com.voracious.ep1cG4m3.framework.Screen;
 import com.voracious.ep1cG4m3.utils.Art;
 import com.voracious.ep1cG4m3.utils.ScreenResultListener;
 
+/**
+ * Loads resources while 
+ * 
+ * TODO: Make this do something, right now I load images as I use them
+ * This class will become more important when I'm loading sounds and lots of levels
+ * @author Voracious Softworks
+ */
+
 public class Preloader extends Screen {
 
 	public static final int RESULT_OK = 0;

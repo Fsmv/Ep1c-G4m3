@@ -370,8 +370,8 @@ public class Entity extends Drawable {
 		this.falling = falling;
 	}
 
+	//TODO: implement
 	public static Entity getEntity(int i) {
-		//TODO:
 		return null;
 	}
 }

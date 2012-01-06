@@ -25,6 +25,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
@@ -53,16 +54,24 @@ public class Drawable extends ImageIcon {
 		setLocation(location);
 	}
 
+	/**
+	 * @param location the location to set
+	 */
+	
 	public void setLocation(Point location) {
 		this.location = location;
 	}
+	
+	/**
+	 * @return the location
+	 */
 
 	public Point getLocation() {
 		return location;
 	}
 
 	/**
-	 * Paints the icon using the stored location
+	 * Paints the icon at the stored location
 	 * 
 	 * @param c component to draw on
 	 * @param g graphics to draw on
@@ -99,5 +108,16 @@ public class Drawable extends ImageIcon {
 		g2.rotate(0, axis.x, axis.y);
 		g2.dispose();
 		setImage(newImg);
+	}
+	
+	public void scale(int x, int y){
+		BufferedImage result = new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = result.createGraphics();
+
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		g2.drawImage(getImage(), 0, 0, x, y, null);
+		g2.dispose();
+		this.setImage(result);
 	}
 }

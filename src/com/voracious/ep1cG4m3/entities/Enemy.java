@@ -23,6 +23,14 @@ import java.io.File;
 
 import com.voracious.ep1cG4m3.framework.Entity;
 
+/**
+ * The parent class for all in-game enemies
+ * <br />
+ * </b>Not yet used or implemented</b>
+ *
+ * @author Voracious Softworks
+ */
+
 public class Enemy extends Entity {
 	public Enemy(File resourceFolder) {
 		super(resourceFolder);

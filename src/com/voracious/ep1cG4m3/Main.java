@@ -51,7 +51,9 @@ public class Main extends JPanel implements ScreenResultListener, ActionListener
 	private Timer timer;
 
 	private int currentScreen = -1;
-	private Screen screens[] = { new Preloader(this, 0), new Menu(this, 1), new Play(this, 2), new Instructions(this, 3), new LevelEditor(this, 4) };
+	private long lastTime;
+	private static int fps;
+	private final Screen screens[] = { new Preloader(this, 0), new Menu(this, 1), new Play(this, 2), new Instructions(this, 3), new LevelEditor(this, 4) };
 
 	public static void main(String[] args) {
 		new Main();
@@ -87,7 +89,7 @@ public class Main extends JPanel implements ScreenResultListener, ActionListener
 	 * @param id the id of the screen to switch to
 	 */
 
-	public void switchScreen(int id) {
+	private void switchScreen(int id) {
 		CardLayout cl = (CardLayout) panel.getLayout();
 		if (currentScreen >= 0 && currentScreen < screens.length) {
 			screens[currentScreen].stop();
@@ -119,27 +121,26 @@ public class Main extends JPanel implements ScreenResultListener, ActionListener
 		}
 	}
 
-	long lastTime;
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		lastTime = System.currentTimeMillis();
 
 		if (currentScreen >= 0 && currentScreen < screens.length) {
+			long time = System.nanoTime();
 			screens[currentScreen].render();
+			System.out.println((System.nanoTime() - time)/(double)1000000);
 			screens[currentScreen].update();
 		}
 
-		try {
-			Thread.sleep(10);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
 		long mspf = System.currentTimeMillis() - lastTime; //milliseconds per frame
-		int fps = (int) (1.0 / (mspf / 1000.0));
-		Play.sendFps(fps);
+		fps = (int) (1000.0/mspf);
+	}
+	
+	/**
+	 * @return current frames per second value
+	 */
+	public static int getFps(){
+		return fps;
 	}
 
 	/**

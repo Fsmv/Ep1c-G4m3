@@ -83,8 +83,8 @@ public class Text extends Drawable {
 	/**
 	 * Create a Drawable string out of a regular String and Initialize it's location.
 	 * 
-	 * @param text
-	 * @param point
+	 * @param text message
+	 * @param point location of text
 	 */
 
 	public Text(String text, Point point) {
@@ -95,6 +95,13 @@ public class Text extends Drawable {
 		myColor = DEF_COLOR;
 	}
 
+	/**
+	 * Create a Drawable string out of a regular String and Initialize it's location.
+	 * 
+	 * @param text message
+	 * @param point location of text
+	 * @param size font size in pixels
+	 */
 	public Text(String text, Point point, int size) {
 		super(parseString(text, size, DEF_SPACING, DEF_COLOR), point);
 		myText = text;
@@ -103,6 +110,14 @@ public class Text extends Drawable {
 		myColor = DEF_COLOR;
 	}
 
+	/**
+	 * Create a Drawable string out of a regular String and Initialize it's location.
+	 * 
+	 * @param text message
+	 * @param point location of text
+	 * @param size font size in pixels
+	 * @param spacing font spacing in pixels
+	 */
 	public Text(String text, Point point, int size, int spacing) {
 		super(parseString(text, size, spacing, DEF_COLOR), point);
 		myText = text;
@@ -111,6 +126,15 @@ public class Text extends Drawable {
 		myColor = DEF_COLOR;
 	}
 
+	/**
+	 * Create a Drawable string out of a regular String and Initialize it's location.
+	 * 
+	 * @param text message
+	 * @param point location of text
+	 * @param size font size in pixels
+	 * @param spacing font spacing in pixels
+	 * @param color font color
+	 */
 	public Text(String text, Point point, int size, int spacing, Color color) {
 		super(parseString(text, size, spacing, color), point);
 		myText = text;
@@ -165,27 +189,45 @@ public class Text extends Drawable {
 
 				if (size != 8)
 					letter = scale(letter, size);
-				if (color != Color.WHITE)
-					letter = changeColor(letter, color);
 
 				g2.drawImage(letter, null, letterWidth * currentCharInLine + (currentCharInLine * spacing), letterHeight * currentLine + currentLine);
 				currentCharInLine++;
 			}
 		}
+		
+		if (color != Color.WHITE)
+			result = changeColor(result, color);
+
 		g2.dispose();
 		return result;
 	}
 
+	/**
+	 * Scales a character image to the specified height
+	 * 
+	 * @param image the image to scale
+	 * @param size the new height
+	 * @return scaled image
+	 */
 	private static BufferedImage scale(BufferedImage image, int size) {
-		BufferedImage result = new BufferedImage(FONT_WIDTH + (size - FONT_HEIGHT), size, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage result = new BufferedImage((int)(size*((double)FONT_WIDTH/(double)FONT_HEIGHT)), size, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = result.createGraphics();
 
-		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-		g2.drawImage(image, 0, 0, FONT_WIDTH + (size - FONT_HEIGHT), size, null);
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		g2.drawImage(image, 0, 0, (int)(size*((double)FONT_WIDTH/(double)FONT_HEIGHT)), size, null);
 		g2.dispose();
 		return result;
 	}
 
+	/**
+	 * Changes white pixels to the specified color in an image
+	 * Meant for changing font color
+	 * 
+	 * @param image image to recolor
+	 * @param color color to change white to
+	 * @return the recolored imaged
+	 */
 	private static BufferedImage changeColor(BufferedImage image, final Color color) {
 		ImageFilter filter = new RGBImageFilter() {
 			public final int filterRGB(int x, int y, int rgb) {

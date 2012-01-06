@@ -145,7 +145,10 @@ public class Player extends Entity {
 		this.gunRotation = gunRotation;
 	}
 
-	public void keyPressed(KeyEvent e) { //TODO: Use a keydown handler with booleans instead of this
+	
+	//TODO: Use a global keydown handler (new class) with booleans instead of these two methods
+	
+	public void keyPressed(KeyEvent e) { 
 		Point.Double v = this.getVelocity();
 		if (e.getKeyCode() == KeyEvent.VK_D) {
 			this.setVelocity(new Point.Double(v.x + Player.WALK_SPEED, v.y));

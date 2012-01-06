@@ -1,3 +1,22 @@
+/*  
+ *  Ep1c G4m3 -- A parody platformer
+ * 
+ *  Copyright (C) 2011  Voracious Softworks
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ */
+
 package com.voracious.ep1cG4m3.utils;
 
 import java.io.BufferedWriter;
@@ -6,15 +25,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Logger {
-	public static final int TYPE_INFO = 0;
-	public static final int TYPE_ERROR = 1;
-	public static final int TYPE_WARNING = 2;
+	public static final int TYPE_ERROR = 0;
+	public static final int TYPE_WARNING = 1;
+	public static final int TYPE_INFO = 2;
 	public static final int TYPE_DEBUG = 3;
 
 	private static File logfile;
 	private static int loglevel;
 	private static BufferedWriter log;
 
+	
+	/**
+	 * Adds a log message to the log file
+	 * 
+	 * @param type The type of message EX: TYPE_ERROR
+	 * @param message The message to put in the log file
+	 */
 	public static void log(int type, String message) {
 		try {
 			if (log == null) {
@@ -100,6 +126,10 @@ public class Logger {
 		log(TYPE_INFO, "Log level is " + loglevel);
 	}
 
+	
+	/**
+	 * Closes the log file (Should be called at shutdown)
+	 */
 	public static void close() {
 		log(TYPE_DEBUG, "Closing log file");
 		if (log != null) {

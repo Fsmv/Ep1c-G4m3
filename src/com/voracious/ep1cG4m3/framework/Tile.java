@@ -22,6 +22,7 @@ package com.voracious.ep1cG4m3.framework;
 import java.awt.Image;
 import java.util.HashMap;
 
+import com.voracious.ep1cG4m3.screens.Play;
 import com.voracious.ep1cG4m3.tiles.Brick;
 import com.voracious.ep1cG4m3.utils.Art;
 import com.voracious.ep1cG4m3.utils.Logger;
@@ -69,8 +70,10 @@ public class Tile extends Drawable {
 		if (image == null && !isAir()) {
 			image = Art.getTileImage(name);
 		}
-		if (image != null)
+		if (image != null){
 			setImage(image);
+			this.scale((int)(tileSize*Play.SCALE), (int)(tileSize*Play.SCALE));
+		}
 	}
 
 	/**

@@ -30,7 +30,7 @@ import java.util.ArrayList;
  */
 
 public class Animation {
-	public static final int FPS = 32;
+	public static final int FPS = 60;
 
 	private int currentFrame;
 	private ArrayList<BufferedImage> frames;

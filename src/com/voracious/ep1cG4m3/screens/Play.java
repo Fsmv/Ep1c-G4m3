@@ -8,6 +8,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
+import com.voracious.ep1cG4m3.Main;
 import com.voracious.ep1cG4m3.entities.Player;
 import com.voracious.ep1cG4m3.framework.Level;
 import com.voracious.ep1cG4m3.framework.Screen;
@@ -23,10 +24,14 @@ public class Play extends Screen {
 	 */
 	private static final long serialVersionUID = -1522258565924156537L;
 	public static final double GRAVITY = 1.8;
-
+	public static final double SCALE = 3;
+	
 	public static int currentLevel = 1;
 	public static int currentWorld = 1;
-	private static int fps = 0;
+	private static int fps = 0;				
+	int[] afps = new int[250]; //fps history array for computing average
+	int fpsi = 0; //fps history array iterator
+
 
 	private Level level;
 
@@ -83,6 +88,7 @@ public class Play extends Screen {
 						level.setTiles(temp);
 						filled = true;
 					}else{
+						filled = false;
 						level.loadNextLevel(); //Doesn't load next level right now, serves as a re-load
 					}
 				}
@@ -91,17 +97,12 @@ public class Play extends Screen {
 
 	}
 
+	
+	/**
+	 * @return the player
+	 */
 	public Player getPlayer() {
 		return player;
-	}
-
-	public void loadNextLevel() {
-		currentLevel++;
-		if (currentLevel > 10) {
-			currentLevel = 1;
-			currentWorld++;
-		}
-		level.loadNextLevel();
 	}
 
 	@Override
@@ -110,8 +111,8 @@ public class Play extends Screen {
 		if (scroll) {
 			x++;
 			y++;
-			int xh = (99 * 16) - viewWindow.width;
-			int yh = (49 * 16) - viewWindow.height;
+			int xh = (int) ((99 * (Tile.tileSize*Play.SCALE)) - viewWindow.width);
+			int yh = (int) ((49 * (Tile.tileSize*Play.SCALE)) - viewWindow.height);
 			int xx = (int) ((xh / 2) * Math.cos(((2 * Math.PI) / xh) * x) + xh / 2);
 			int yy = (int) ((yh / 2) * Math.cos(((2 * Math.PI) / yh) * y) + yh / 2);
 			if (xx < 0)
@@ -126,45 +127,58 @@ public class Play extends Screen {
 		}
 	}
 
-	int[] afps = new int[250];
-	int fpsi = 0;
-
+	long [] times = new long[250];
+	int timit = 0;
 	@Override
 	public void draw(Graphics g) {
 		Tile[][] tiles = level.getTiles();
-		int ri = 0, ci = 0; //Row iterator, column iterator
-		int a = viewWindow.x / Tile.tileSize;
+		int a = (int) (viewWindow.x / (Tile.tileSize*Play.SCALE));
 		if (a < 0)
 			a = 0;
 
-		int b = (viewWindow.width + viewWindow.x) / Tile.tileSize + 1;
+		int b = (int) ((viewWindow.width + viewWindow.x) / (Tile.tileSize*Play.SCALE) + 1);
 		if (b >= tiles.length)
 			b = tiles.length - 1;
 
-		int d = viewWindow.y / Tile.tileSize;
+		int d = (int) (viewWindow.y / (Tile.tileSize*Play.SCALE));
 		if (d < 0)
 			d = 0;
-		int e = (viewWindow.height + viewWindow.y) / Tile.tileSize + 1;
+		int e = (int) ((viewWindow.height + viewWindow.y) / (Tile.tileSize*Play.SCALE) + 1);
 		if (e >= tiles[0].length)
 			e = tiles[0].length - 1;
 
+		int it = 0;
+		int ri = 0, ci = 0; //Row iterator, column iterator
 		for (int r = a; r < b; r++) {
 			for (int c = d; c < e; c++) {
 				if (tiles[r][c] != null) {
-					int xx = ri * Tile.tileSize - viewWindow.x % Tile.tileSize;
-					int yy = ci * Tile.tileSize - viewWindow.y % Tile.tileSize;
+					it++;
+					int xx = (int) (ri * (Tile.tileSize*Play.SCALE) - viewWindow.x % (Tile.tileSize*Play.SCALE));
+					int yy = (int) (ci * (Tile.tileSize*Play.SCALE) - viewWindow.y % (Tile.tileSize*Play.SCALE));
 					if (!tiles[r][c].getLocation().equals(new Point(xx, yy)))
 						tiles[r][c].setLocation(new Point(xx, yy));
+					long time = System.currentTimeMillis();
 					tiles[r][c].paintIcon(this, g);
+					times[timit] = System.currentTimeMillis() - time;
+					timit++;
+					if(timit >= 250)
+						timit = 0;
+					int temp = 0;
+					for(int i=0; i<times.length; i++)
+						temp += times[i];
+						//System.out.println(temp/(double)  times.length);
 				}
 				ci++;
 			}
 			ri++;
 			ci = 0;
 		}
+		//System.out.println(it);
 
 		player.paintIcon(this, g);
 		//versionNum.paintIcon(this, g);
+		fps = Main.getFps();
+		
 		new Text(fps + " fps", new Point(50, 50), 20, 1, Color.BLACK).paintIcon(this, g);
 		afps[fpsi] = fps;
 		fpsi++;
@@ -179,11 +193,6 @@ public class Play extends Screen {
 			tot += afps[i];
 			ii++;
 		}
-
 		new Text("Average fps: " + tot / ii, new Point(50, 80), 20, 1, Color.BLACK).paintIcon(this, g);
-	}
-
-	public static void sendFps(int fps) {
-		Play.fps = fps;
 	}
 }

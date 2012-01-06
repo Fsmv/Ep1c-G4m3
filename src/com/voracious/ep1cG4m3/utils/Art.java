@@ -25,6 +25,12 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
+/**
+ * A utility class meant for loading images
+ * 
+ * @author Voracious Softworks
+ */
+
 public class Art {
 	public static BufferedImage font;
 	public static BufferedImage tileTextures;
