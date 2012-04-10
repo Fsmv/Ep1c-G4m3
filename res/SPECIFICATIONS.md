@@ -5,6 +5,7 @@ Throughout the rest of this file, k is an integer (in the code k is incremented 
 By convention, strings written in the colors as hex values should be all lower-case. While this has nothing to do with functionality, it is just good design.
 
 Helpful utilities:
+
  * [String to hex converter](http://www.string-functions.com/string-hex.aspx)
  * [Decimal to hex converer](http://easycalculation.com/decimal-converter.php)
 
